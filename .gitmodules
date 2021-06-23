@@ -1,0 +1,3 @@
+[submodule "spectre/vendor/glfw"]
+	path = spectre/vendor/glfw/glfw
+	url = https://github.com/glfw/glfw

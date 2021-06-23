@@ -10,6 +10,10 @@ workspace "spectre"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+group "dependencies"
+	include "spectre/vendor/glfw"
+group ""
+
 project "spectre"
     location "spectre"
     kind "StaticLib"
@@ -28,7 +32,13 @@ project "spectre"
 
     includedirs
     {
-        "%{prj.name}/source"
+        "%{prj.name}/source",
+        "%{prj.name}/vendor/glfw/glfw/include"
+    }
+
+    links
+    {
+        "glfw"
     }
 
     filter "configurations:Debug"
@@ -46,7 +56,8 @@ project "spectre"
 
         defines
         {
-            "SPECTRE_PLATFORM_WINDOWS"
+            "SPECTRE_PLATFORM_WINDOWS",
+            "GLFW_INCLUDE_NONE"
         }
 
 project "sandbox"

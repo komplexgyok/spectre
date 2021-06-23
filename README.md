@@ -5,7 +5,7 @@ It's a 2D game engine written in C++. It only supports Visual Studio 2019 on Win
 Setup/usage:
 1. Clone the github repository:
 ```
-git clone https://github.com/komplexgyok/spectre <path>
+git clone --recursive https://github.com/komplexgyok/spectre <path>
 ```
 2. Run the generate.bat script in the scripts folder, that will generate and configure the required VS solution and all the projects.
 
