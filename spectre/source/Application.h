@@ -1,6 +1,8 @@
 #pragma once
 
-struct GLFWwindow;
+#include <memory>
+
+#include "Window.h"
 
 namespace Spectre
 {
@@ -13,7 +15,7 @@ namespace Spectre
 		void run();
 
 	private:
-		GLFWwindow* window;
+		std::unique_ptr<Window> m_Window;
 		unsigned int vertexArray;
 		unsigned int vertexBuffer;
 		unsigned int indexBuffer;

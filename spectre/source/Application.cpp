@@ -12,34 +12,7 @@ namespace Spectre
 {
 	Application::Application()
 	{
-		// GLFW initialization
-		std::cout << "Initializing GLFW ... ";
-		if (!glfwInit()) {
-			std::cout << "Failed" << std::endl;
-		}
-		std::cout << "OK" << std::endl;
-
-		// Create window
-		std::cout << "Creating window ... ";
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		window = glfwCreateWindow(1280, 720, "Spectre Engine", nullptr, nullptr);
-
-		if (!window) {
-			std::cout << "Failed" << std::endl;
-		}
-		std::cout << "OK" << std::endl;
-
-		glfwMakeContextCurrent(window);
-
-		// Glad initialization
-		std::cout << "Initializing Glad ... ";
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-			std::cout << "Failed" << std::endl;
-		}
-		std::cout << "OK" << std::endl;
+		m_Window = std::make_unique<Window>(1280, 720, "Spectre Engine");
 
 		// Vertex data
 		float vertices[] = {
@@ -81,14 +54,11 @@ namespace Spectre
 	}
 
 	Application::~Application()
-	{
-		glfwDestroyWindow(window);
-		glfwTerminate();
-	}
+	{}
 
 	void Application::run()
 	{
-		while (!glfwWindowShouldClose(window)) {
+		while (!glfwWindowShouldClose(m_Window->getNativeWindow())) {
 			// Handle input
 			glfwPollEvents();
 
@@ -101,7 +71,7 @@ namespace Spectre
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 			
 			// Swap buffers
-			glfwSwapBuffers(window);
+			glfwSwapBuffers(m_Window->getNativeWindow());
 		}
 	}
 }
