@@ -15,6 +15,5 @@ namespace Spectre
 	private:
 		GLFWwindow* window;
 		unsigned int vertexBuffer;
-		unsigned int shader;
 	};
 }
