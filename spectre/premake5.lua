@@ -10,14 +10,16 @@ project "spectre"
     files
     {
         "source/**.h",
-        "source/**.cpp"
+        "source/**.cpp",
+        "vendor/stb_image/**.cpp"
     }
 
     includedirs
     {
         "source",
         "vendor/glad/include",
-        "vendor/glfw/glfw/include"
+        "vendor/glfw/glfw/include",
+        "vendor/stb_image"
     }
 
     links

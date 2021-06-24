@@ -16,15 +16,17 @@ namespace Spectre
 
 		// Vertex data
 		float vertices[] = {
-			// Position         // Color
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f
+			// Position         // Color                // Texture coordinates
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f
 		};
 
 		// Index data
 		unsigned int indices[] = {
-			0, 1, 2
+			0, 1, 2,
+			2, 3, 0
 		};
 
 		// Vertex array
@@ -38,9 +40,11 @@ namespace Spectre
 
 		// Vertex attributes
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), nullptr);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), nullptr);
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(7 * sizeof(float)));
 
 		// Index buffer
 		glCreateBuffers(1, &indexBuffer);
@@ -51,6 +55,9 @@ namespace Spectre
 
 		// Load shaders
 		ResourceManager::addShader("basic", "../spectre/resources/shaders/basic.vert", "../spectre/resources/shaders/basic.frag");
+
+		// Load textures
+		ResourceManager::addTexture("metal-box", "../spectre/resources/textures/metal-box.jpg");
 	}
 
 	Application::~Application()
@@ -67,8 +74,9 @@ namespace Spectre
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			ResourceManager::getShader("basic")->use();
+			ResourceManager::getTexture("metal-box")->bind();
 			glBindVertexArray(vertexArray);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 			
 			// Swap buffers
 			glfwSwapBuffers(m_Window->getNativeWindow());
