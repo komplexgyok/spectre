@@ -19,6 +19,7 @@ project "spectre"
         "source",
         "vendor/glad/include",
         "vendor/glfw/glfw/include",
+        "vendor/glm",
         "vendor/stb_image"
     }
 

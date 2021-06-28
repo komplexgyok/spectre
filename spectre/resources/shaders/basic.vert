@@ -7,9 +7,11 @@ layout (location = 2) in vec2 textureCoordinate;
 out vec4 vColor;
 out vec2 vTextureCoordinate;
 
+uniform mat4 uProjection;
+
 void main()
 {
     vColor = color;
     vTextureCoordinate = textureCoordinate;
-    gl_Position = vec4(position, 1.0f);
+    gl_Position = uProjection * vec4(position, 1.0f);
 }

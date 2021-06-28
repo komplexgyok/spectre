@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "Renderer2D.h"
 #include "Window.h"
 
 namespace Spectre
@@ -16,9 +17,11 @@ namespace Spectre
 
 	private:
 		std::unique_ptr<Window> m_Window;
+		Renderer2D renderer;
+		unsigned int texture;
+
 		unsigned int vertexArray;
 		unsigned int vertexBuffer;
 		unsigned int indexBuffer;
-		unsigned int texture;
 	};
 }

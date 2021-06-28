@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Spectre
 {
@@ -26,6 +27,18 @@ namespace Spectre
 	void Shader::use()
 	{
 		glUseProgram(id);
+	}
+
+	void Shader::setUniformInt(const std::string& name, int value)
+	{
+		int location = getUniformLocation(name);
+		glUniform1i(location, value);
+	}
+
+	void Shader::setUniformMat4(const std::string& name, const glm::mat4& matrix)
+	{
+		int location = getUniformLocation(name);
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	unsigned int Shader::compile(unsigned int shaderType, const std::string& shaderSource)
@@ -88,5 +101,10 @@ namespace Spectre
 		glDetachShader(program, fragmentShader);
 
 		return program;
+	}
+
+	int Shader::getUniformLocation(const std::string& name)
+	{
+		return glGetUniformLocation(id, name.c_str());
 	}
 }

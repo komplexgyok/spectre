@@ -38,6 +38,8 @@ namespace Spectre
 			std::cout << "Failed" << std::endl;
 		}
 		std::cout << "OK" << std::endl;
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	Window::~Window()
