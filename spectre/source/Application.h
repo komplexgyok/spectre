@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include <glm/glm.hpp>
+
 #include "Renderer2D.h"
 #include "Window.h"
 
@@ -23,5 +25,7 @@ namespace Spectre
 		unsigned int vertexArray;
 		unsigned int vertexBuffer;
 		unsigned int indexBuffer;
+
+		glm::vec4 backgroundColor;
 	};
 }

@@ -1,5 +1,5 @@
-project "spectre"
-    kind "StaticLib"
+project "spectre-editor"
+    kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
     staticruntime "on"
@@ -10,25 +10,18 @@ project "spectre"
     files
     {
         "source/**.h",
-        "source/**.cpp",
-        "vendor/stb_image/**.cpp"
+        "source/**.cpp"
     }
 
     includedirs
     {
-        "source",
-        "vendor/glad/include",
-        "vendor/glfw/glfw/include",
-        "vendor/glm",
-        "vendor/imgui/imgui",
-        "vendor/stb_image"
+        "%{wks.location}/spectre/source",
+        "%{wks.location}/spectre/vendor/glm"
     }
 
     links
     {
-        "glad",
-        "glfw",
-        "imgui"
+        "spectre"
     }
 
     filter "configurations:Debug"
@@ -46,6 +39,5 @@ project "spectre"
 
         defines
         {
-            "SPECTRE_PLATFORM_WINDOWS",
-            "GLFW_INCLUDE_NONE"
+            "SPECTRE_PLATFORM_WINDOWS"
         }

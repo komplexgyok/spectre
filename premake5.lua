@@ -1,6 +1,6 @@
 workspace "spectre"
     architecture "x86_64"
-    startproject "sandbox"
+    startproject "spectre-editor"
 
     configurations
     {
@@ -13,7 +13,9 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 group "dependencies"
 	include "spectre/vendor/glad"
 	include "spectre/vendor/glfw"
+	include "spectre/vendor/imgui"
 group ""
 
 include "spectre"
+include "spectre-editor"
 include "sandbox"

@@ -7,6 +7,9 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
 
 #include "Renderer2D.h"
 #include "ResourceManager.h"
@@ -16,6 +19,23 @@ namespace Spectre
 	Application::Application()
 	{
 		m_Window = std::make_unique<Window>(1280, 720, "Spectre Engine");
+
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		ImGui::StyleColorsDark();
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			style.WindowRounding = 0.0f;
+			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
+
+		ImGui_ImplGlfw_InitForOpenGL(m_Window->getNativeWindow(), true);
+		ImGui_ImplOpenGL3_Init("#version 330");
 
 		// Load shaders
 		ResourceManager::addShader("basic", "../spectre/resources/shaders/basic.vert", "../spectre/resources/shaders/basic.frag");
@@ -107,10 +127,16 @@ namespace Spectre
 		glm::mat4 projection = glm::mat4(1.0f);
 		projection = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f);
 		ResourceManager::getShader("3d")->setUniformMat4("uProjection", projection);
+
+		backgroundColor = glm::vec4(0.2f, 0.3f, 0.8f, 1.0f);
 	}
 
 	Application::~Application()
-	{}
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
 
 	void Application::run()
 	{
@@ -118,10 +144,31 @@ namespace Spectre
 			// Handle input
 			glfwPollEvents();
 
-			// Render
-			glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 
+			ImGui::Begin("Test Panel");
+			ImGui::Text("Hello from Spectre Engine");
+			ImGui::ColorEdit4("Background Color", &backgroundColor.r);
+
+			ImGui::End();
+
+			ImGui::Render();
+			int display_w, display_h;
+			glfwGetFramebufferSize(m_Window->getNativeWindow(), &display_w, &display_h);
+			glViewport(0, 0, display_w, display_h);
+			glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+
+			// Render
 			glm::vec3 cubePositions[] = {
 				glm::vec3(0.0f,  0.0f,  0.0f),
 				glm::vec3(2.0f,  5.0f, -15.0f),
