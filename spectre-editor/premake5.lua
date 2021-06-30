@@ -16,7 +16,11 @@ project "spectre-editor"
     includedirs
     {
         "%{wks.location}/spectre/source",
-        "%{wks.location}/spectre/vendor/glm"
+        "%{wks.location}/spectre/vendor",
+        "%{wks.location}/spectre/vendor/glm",
+        "%{wks.location}/spectre/vendor/glad/include",
+        "%{wks.location}/spectre/vendor/glfw/glfw/include",
+        "%{wks.location}/spectre/vendor/imgui/imgui"
     }
 
     links
