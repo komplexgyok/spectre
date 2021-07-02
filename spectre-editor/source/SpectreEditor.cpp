@@ -1,5 +1,7 @@
 #include <Spectre.h>
 
+#include <iostream>
+
 #include <glad/include/glad/glad.h>
 #include <glfw/glfw/include/GLFW/glfw3.h>
 #include <glm/glm/glm.hpp>
@@ -16,6 +18,11 @@ public:
 
 	void onAttach() override
 	{}
+
+	void onEvent(Spectre::Event& event) override
+	{
+		std::cout << event.toString();
+	}
 
 	void onRender() override
 	{

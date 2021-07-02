@@ -1,7 +1,10 @@
 #pragma once
 
+#include <functional>
 #include <string>
 #include <string_view>
+
+#include "event/Event.h"
 
 struct GLFWwindow;
 
@@ -15,10 +18,13 @@ namespace Spectre
 
 		inline GLFWwindow* getNativeWindow() const { return m_Window; }
 
+		void setEventCallback(std::function<void(Event& event)> eventCallback) { m_EventCallback = eventCallback; }
+
 	private:
 		GLFWwindow* m_Window;
 		unsigned int m_Width;
 		unsigned int m_Height;
 		std::string m_Title;
+		std::function<void(Event&)> m_EventCallback;
 	};
 }

@@ -8,6 +8,7 @@
 #include "Layer.h"
 #include "Renderer2D.h"
 #include "Window.h"
+#include "event/WindowCloseEvent.h"
 
 namespace Spectre
 {
@@ -19,6 +20,9 @@ namespace Spectre
 
 		void run();
 		void addLayer(Layer* layer);
+
+		void onEvent(Event& event);
+		bool onWindowClose(WindowCloseEvent& event);
 
 		static Application& get() { return *s_Instance; }
 		Window& getWindow() { return *m_Window; }
@@ -33,6 +37,7 @@ namespace Spectre
 		unsigned int indexBuffer;
 
 		glm::vec4 backgroundColor;
+		bool m_IsRunning = true;
 
 		static Application* s_Instance;
 	};

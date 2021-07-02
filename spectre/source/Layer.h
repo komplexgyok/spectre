@@ -1,5 +1,7 @@
 #pragma once
 
+#include "event/Event.h"
+
 namespace Spectre
 {
 	class Layer
@@ -11,6 +13,7 @@ namespace Spectre
 		virtual void onAttach();
 		virtual void onDetach();
 
+		virtual void onEvent(Event& event);
 		virtual void onUpdate();
 		virtual void onRender();
 		virtual void onImGuiRender();

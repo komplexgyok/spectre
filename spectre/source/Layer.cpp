@@ -8,6 +8,9 @@ namespace Spectre
 	void Layer::onDetach()
 	{}
 
+	void Layer::onEvent(Event& event)
+	{}
+
 	void Layer::onUpdate()
 	{}
 

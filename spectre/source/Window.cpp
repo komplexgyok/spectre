@@ -5,6 +5,15 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "event/KeyPressEvent.h"
+#include "event/KeyReleaseEvent.h"
+#include "event/MouseButtonPressEvent.h"
+#include "event/MouseButtonReleaseEvent.h"
+#include "event/MouseMoveEvent.h"
+#include "event/MouseScrollEvent.h"
+#include "event/WindowCloseEvent.h"
+#include "event/WindowResizeEvent.h"
+
 namespace Spectre
 {
 	Window::Window(unsigned int width, unsigned int height, std::string_view title)
@@ -38,6 +47,88 @@ namespace Spectre
 			std::cout << "Failed" << std::endl;
 		}
 		std::cout << "OK" << std::endl;
+
+		glfwSetWindowUserPointer(m_Window, &m_EventCallback);
+
+		// Set GLFW callbacks
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+			std::function<void(Event&)>& eventCallback = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+
+			switch (action) {
+				case GLFW_PRESS:
+				{
+					KeyPressEvent event(key, false);
+					eventCallback(event);
+					break;
+				}
+
+				case GLFW_REPEAT:
+				{
+					KeyPressEvent event(key, true);
+					eventCallback(event);
+					break;
+				}
+
+				case GLFW_RELEASE:
+				{
+					KeyReleaseEvent event(key);
+					eventCallback(event);
+					break;
+				}
+
+				default: break;
+			}
+		});
+
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+			std::function<void(Event&)>& eventCallback = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+			
+			switch (action) {
+				case GLFW_PRESS:
+				{
+					MouseButtonPressEvent event(button);
+					eventCallback(event);
+					break;
+				}
+
+				case GLFW_RELEASE:
+				{
+					MouseButtonReleaseEvent event(button);
+					eventCallback(event);
+					break;
+				}
+			
+				default: break;
+			}
+		});
+
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double positionX, double positionY) {
+			std::function<void(Event&)>& eventCallback = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+			
+			MouseMoveEvent event(positionX, positionY);
+			eventCallback(event);
+		});
+
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double offsetX, double offsetY) {
+			std::function<void(Event&)>& eventCallback = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+
+			MouseScrollEvent event(offsetX, offsetY);
+			eventCallback(event);
+		});
+
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+			std::function<void(Event&)>& eventCallback = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+			
+			WindowCloseEvent event;
+			eventCallback(event);
+		});
+
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+			std::function<void(Event&)>& eventCallback = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+
+			WindowResizeEvent event(width, height);
+			eventCallback(event);
+		});
 
 		glEnable(GL_DEPTH_TEST);
 	}
