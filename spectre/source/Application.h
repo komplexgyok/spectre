@@ -19,6 +19,8 @@ namespace Spectre
 		virtual ~Application();
 
 		void run();
+		void close();
+
 		void addLayer(Layer* layer);
 
 		void onEvent(Event& event);

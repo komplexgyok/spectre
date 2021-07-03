@@ -35,6 +35,12 @@ namespace Spectre
 		glUniform1i(location, value);
 	}
 
+	void Shader::setUniformVec4(const std::string& name, const glm::vec4& vector)
+	{
+		int location = getUniformLocation(name);
+		glUniform4fv(location, 1, glm::value_ptr(vector));
+	}
+
 	void Shader::setUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
 		int location = getUniformLocation(name);

@@ -40,6 +40,7 @@ namespace Spectre
 		std::cout << "OK" << std::endl;
 
 		glfwMakeContextCurrent(m_Window);
+		glfwSwapInterval(0);
 
 		// Glad initialization
 		std::cout << "Initializing Glad ... ";
@@ -130,6 +131,7 @@ namespace Spectre
 			eventCallback(event);
 		});
 
+		//glViewport(0, 0, 1280, 720);
 		glEnable(GL_DEPTH_TEST);
 	}
 

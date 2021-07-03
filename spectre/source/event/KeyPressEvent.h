@@ -23,6 +23,8 @@ namespace Spectre
 			return stream.str();
 		}
 
+		int getKey() { return m_Key; }
+
 		static EventType getStaticType() { return EventType::KeyPress; }
 
 	private:

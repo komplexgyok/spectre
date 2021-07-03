@@ -50,6 +50,11 @@ namespace Spectre
 		}
 	}
 
+	void Application::close()
+	{
+		m_IsRunning = false;
+	}
+
 	void Application::addLayer(Layer* layer)
 	{
 		layerStack.push_back(layer);

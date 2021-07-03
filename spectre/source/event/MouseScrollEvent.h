@@ -23,6 +23,8 @@ namespace Spectre
 			return stream.str();
 		}
 
+		int getOffset() { return m_OffsetY; }
+
 		static EventType getStaticType() { return EventType::MouseScroll; }
 
 	private:
