@@ -61,7 +61,8 @@ namespace Spectre
 				float red = static_cast<float>(distribution(m_Generator));
 				float green = static_cast<float>(distribution(m_Generator));
 				float blue = static_cast<float>(distribution(m_Generator));
-				m_Renderer.drawQuad(glm::vec2((float)(j * 100), (float)(i * 100)), glm::vec2(100.0f, 100.0f), glm::vec4(red, green, blue, 1.0f));
+				m_Renderer.drawQuad(glm::vec2((float)(j * 200), (float)(i * 200)), glm::vec2(100.0f, 100.0f), glm::vec4(red, green, blue, 1.0f));
+				//m_Renderer.drawQuad(glm::vec2((float)(j * 200), (float)(i * 200) - 1000.0f), glm::vec2(100.0f, 100.0f), "grass-top");
 			}
 		}
 

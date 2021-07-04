@@ -16,6 +16,7 @@ namespace Spectre
 	{
 		glm::vec4 position;
 		glm::vec4 color;
+		glm::vec2 textureCoordinate;
 	};
 
 	class Renderer2D
@@ -31,7 +32,7 @@ namespace Spectre
 		void flush();
 
 		void drawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
-		void drawQuad(float xPosition, float yPosition, float width, float height, const std::string& textureName);
+		void drawQuad(const glm::vec2& position, const glm::vec2& size, const std::string& textureName);
 
 		void resetStatistics()
 		{

@@ -12,6 +12,11 @@ namespace Spectre {
 		{
 			// Load shaders
 			ResourceManager::addShader("flat-color", "assets/shaders/flat-color.vert", "assets/shaders/flat-color.frag");
+			ResourceManager::addShader("texture", "assets/shaders/texture.vert", "assets/shaders/texture.frag");
+
+			// Load textures
+			ResourceManager::addTexture("white-texture", "assets/textures/white-texture.png");
+			ResourceManager::addTexture("grass-top", "assets/textures/grass-top.png");
 
 			addLayer(new EditorLayer());
 		}
