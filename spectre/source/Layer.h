@@ -18,7 +18,7 @@ namespace Spectre
 		virtual void onRender();
 		virtual void onImGuiRender();
 
-		virtual void begin() {}
-		virtual void end() {}
+		virtual void imGuiBegin();
+		virtual void imGuiEnd();
 	};
 }

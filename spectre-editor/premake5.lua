@@ -43,5 +43,6 @@ project "spectre-editor"
 
         defines
         {
-            "SPECTRE_PLATFORM_WINDOWS"
+            "SPECTRE_PLATFORM_WINDOWS",
+            "_CRT_SECURE_NO_WARNINGS"
         }

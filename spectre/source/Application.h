@@ -31,7 +31,6 @@ namespace Spectre
 
 	private:
 		std::unique_ptr<Window> m_Window;
-		Renderer2D renderer;
 		std::vector<Layer*> layerStack;
 		unsigned int texture;
 

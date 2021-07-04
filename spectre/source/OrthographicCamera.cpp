@@ -43,26 +43,14 @@ namespace Spectre
 			ResourceManager::getShader("flat-color")->setUniformMat4("uView", m_View);
 		}
 		if (event.getKey() == SPECTRE_KEY_W) {
-			m_View = glm::translate(m_View, glm::vec3(0.0f, 10.0f, 0.0f));
-			ResourceManager::getShader("flat-color")->use();
-			ResourceManager::getShader("flat-color")->setUniformMat4("uView", m_View);
-		}
-		if (event.getKey() == SPECTRE_KEY_S) {
 			m_View = glm::translate(m_View, glm::vec3(0.0f, -10.0f, 0.0f));
 			ResourceManager::getShader("flat-color")->use();
 			ResourceManager::getShader("flat-color")->setUniformMat4("uView", m_View);
 		}
-		if (event.getKey() == SPECTRE_KEY_O) {
-			m_ZoomLevel -= 0.25f;
-			m_Projection = glm::ortho(0.0f, 1280.0f * m_ZoomLevel, 0.0f, 720.0f * m_ZoomLevel, -1.0f, 1.0f);
+		if (event.getKey() == SPECTRE_KEY_S) {
+			m_View = glm::translate(m_View, glm::vec3(0.0f, 10.0f, 0.0f));
 			ResourceManager::getShader("flat-color")->use();
-			ResourceManager::getShader("flat-color")->setUniformMat4("uProjection", m_Projection);
-		}
-		if (event.getKey() == SPECTRE_KEY_P) {
-			m_ZoomLevel += 0.25f;
-			m_Projection = glm::ortho(0.0f, 1280.0f * m_ZoomLevel, 0.0f, 720.0f * m_ZoomLevel, -1.0f, 1.0f);
-			ResourceManager::getShader("flat-color")->use();
-			ResourceManager::getShader("flat-color")->setUniformMat4("uProjection", m_Projection);
+			ResourceManager::getShader("flat-color")->setUniformMat4("uView", m_View);
 		}
 
 		return true;
@@ -70,7 +58,7 @@ namespace Spectre
 
 	bool OrthographicCamera::onMouseScroll(MouseScrollEvent& event)
 	{
-		m_ZoomLevel += event.getOffset() * 0.25f;
+		m_ZoomLevel += static_cast<float>(event.getOffset()) * 0.25f;
 		m_Projection = glm::ortho(0.0f, 1280.0f * m_ZoomLevel, 0.0f, 720.0f * m_ZoomLevel, -1.0f, 1.0f);
 		ResourceManager::getShader("flat-color")->use();
 		ResourceManager::getShader("flat-color")->setUniformMat4("uProjection", m_Projection);

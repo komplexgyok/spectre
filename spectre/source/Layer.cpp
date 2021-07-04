@@ -19,4 +19,10 @@ namespace Spectre
 
 	void Layer::onImGuiRender()
 	{}
+	
+	void Layer::imGuiBegin()
+	{}
+	
+	void Layer::imGuiEnd()
+	{}
 }

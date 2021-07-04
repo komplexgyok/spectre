@@ -12,7 +12,6 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include "EventDispatcher.h"
-#include "Renderer2D.h"
 #include "ResourceManager.h"
 
 namespace Spectre
@@ -40,9 +39,9 @@ namespace Spectre
 				layer->onUpdate();
 				layer->onRender();
 
-				layer->begin();
+				layer->imGuiBegin();
 				layer->onImGuiRender();
-				layer->end();
+				layer->imGuiEnd();
 			}
 			
 			// Swap buffers
