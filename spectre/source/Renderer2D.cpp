@@ -36,20 +36,30 @@ namespace Spectre
 
 		// Vertex attributes
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4) + sizeof(glm::vec2), (void*)offsetof(QuadVertex, position));
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)offsetof(QuadVertex, position));
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4) + sizeof(glm::vec2), (void*)offsetof(QuadVertex, color));
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)offsetof(QuadVertex, color));
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4) + sizeof(glm::vec2), (void*)offsetof(QuadVertex, textureCoordinate));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)offsetof(QuadVertex, textureCoordinate));
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)offsetof(QuadVertex, textureId));
 
 		// Index buffer
 		glCreateBuffers(1, &m_IndexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_INDEX_COUNT * sizeof(uint32_t), m_IndexData, GL_STATIC_DRAW);
 
+		int samplers[2];
+		for (int i = 0; i < 2; i++) {
+			samplers[i] = i;
+		}
+
 		ResourceManager::getShader("texture")->use();
 		ResourceManager::getShader("texture")->setUniformMat4("uModel", glm::mat4(1.0f));
-		ResourceManager::getShader("texture")->setUniformInt("uTexture", 0);
+		ResourceManager::getShader("texture")->setUniformIntArray("uTextures", 2, samplers);
+
+		m_TextureSlots[0] = ResourceManager::getTexture("white-texture")->getId();
+		m_TextureSlots[1] = ResourceManager::getTexture("grass-top")->getId();
 	}
 
 	Renderer2D::~Renderer2D()
@@ -69,6 +79,9 @@ namespace Spectre
 
 	void Renderer2D::endScene()
 	{
+		uint32_t dataSize = (uint32_t)((uint8_t*)m_VertexDataPtr - (uint8_t*)m_VertexDataBase);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, dataSize, m_VertexDataBase);
+
 		flush();
 	}
 
@@ -86,10 +99,11 @@ namespace Spectre
 
 	void Renderer2D::flush()
 	{
-		uint32_t dataSize = (uint32_t)((uint8_t*)m_VertexDataPtr - (uint8_t*)m_VertexDataBase);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, dataSize, m_VertexDataBase);
-		
 		ResourceManager::getShader("texture")->use();
+		for (uint32_t i = 0; i < 2; i++) {
+			glBindTextureUnit(i, m_TextureSlots[i]);
+		}
+
 		glBindVertexArray(m_VertexArray);
 		glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, nullptr);
 
@@ -102,34 +116,36 @@ namespace Spectre
 			nextBatch();
 		}
 
-		ResourceManager::getTexture("white-texture")->bind();
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(position.x + size.x / 2, position.y + size.y / 2, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 0.0f));
 
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(position.x, position.y, 0.0f));
-		model = glm::scale(model, glm::vec3(size.x, size.y, 0.0f));
+		float textureId = 0.0f;
 
 		// Vertex data
-		m_VertexDataPtr->position = model * glm::vec4(-1.0f, -1.0f, 0.0f, 1.0f);
+		m_VertexDataPtr->position = model * glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f);
 		m_VertexDataPtr->color = color;
 		m_VertexDataPtr->textureCoordinate = glm::vec2(0.0f, 0.0f);
+		m_VertexDataPtr->textureId = textureId;
 
 		m_VertexDataPtr++;
 
-		m_VertexDataPtr->position = model * glm::vec4(1.0f, -1.0f, 0.0f, 1.0f);
+		m_VertexDataPtr->position = model * glm::vec4(0.5f, -0.5f, 0.0f, 1.0f);
 		m_VertexDataPtr->color = color;
 		m_VertexDataPtr->textureCoordinate = glm::vec2(1.0f, 0.0f);
+		m_VertexDataPtr->textureId = textureId;
 
 		m_VertexDataPtr++;
 
-		m_VertexDataPtr->position = model * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+		m_VertexDataPtr->position = model * glm::vec4(0.5f, 0.5f, 0.0f, 1.0f);
 		m_VertexDataPtr->color = color;
 		m_VertexDataPtr->textureCoordinate = glm::vec2(1.0f, 1.0f);
+		m_VertexDataPtr->textureId = textureId;
 
 		m_VertexDataPtr++;
 
-		m_VertexDataPtr->position = model * glm::vec4(-1.0f, 1.0f, 0.0f, 1.0f);
+		m_VertexDataPtr->position = model * glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f);
 		m_VertexDataPtr->color = color;
 		m_VertexDataPtr->textureCoordinate = glm::vec2(0.0f, 1.0f);
+		m_VertexDataPtr->textureId = textureId;
 
 		m_VertexDataPtr++;
 
@@ -138,40 +154,46 @@ namespace Spectre
 		m_IndexCount += 6;
 	}
 
-	void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, const std::string& textureName)
+	void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture> texture)
 	{
 		if (m_IndexCount >= MAX_INDEX_COUNT) {
 			nextBatch();
 		}
 
-		ResourceManager::getTexture(textureName)->bind();
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(position.x + size.x / 2, position.y + size.y / 2, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 0.0f));
 
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(position.x, position.y, 0.0f));
-		model = glm::scale(model, glm::vec3(size.x, size.y, 0.0f));
+		float textureId = 0.0f;
+
+		if (texture->getId() == ResourceManager::getTexture("grass-top")->getId()) {
+			textureId = 1.0f;
+		}
 
 		// Vertex data
-		m_VertexDataPtr->position = model * glm::vec4(-1.0f, -1.0f, 0.0f, 1.0f);
+		m_VertexDataPtr->position = model * glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f);
 		m_VertexDataPtr->color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
 		m_VertexDataPtr->textureCoordinate = glm::vec2(0.0f, 0.0f);
+		m_VertexDataPtr->textureId = textureId;
 
 		m_VertexDataPtr++;
 
-		m_VertexDataPtr->position = model * glm::vec4(1.0f, -1.0f, 0.0f, 1.0f);
+		m_VertexDataPtr->position = model * glm::vec4(0.5f, -0.5f, 0.0f, 1.0f);
 		m_VertexDataPtr->color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
 		m_VertexDataPtr->textureCoordinate = glm::vec2(1.0f, 0.0f);
+		m_VertexDataPtr->textureId = textureId;
 
 		m_VertexDataPtr++;
 
-		m_VertexDataPtr->position = model * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+		m_VertexDataPtr->position = model * glm::vec4(0.5f, 0.5f, 0.0f, 1.0f);
 		m_VertexDataPtr->color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
 		m_VertexDataPtr->textureCoordinate = glm::vec2(1.0f, 1.0f);
+		m_VertexDataPtr->textureId = textureId;
 
 		m_VertexDataPtr++;
 
-		m_VertexDataPtr->position = model * glm::vec4(-1.0f, 1.0f, 0.0f, 1.0f);
+		m_VertexDataPtr->position = model * glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f);
 		m_VertexDataPtr->color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
 		m_VertexDataPtr->textureCoordinate = glm::vec2(0.0f, 1.0f);
+		m_VertexDataPtr->textureId = textureId;
 
 		m_VertexDataPtr++;
 

@@ -23,6 +23,9 @@ namespace Spectre
 			return stream.str();
 		}
 
+		inline int getWidth() const { return m_Width; }
+		inline int getHeight() const { return m_Height; }
+
 		static EventType getStaticType() { return EventType::WindowResize; }
 
 	private:

@@ -1,24 +1,17 @@
 #include "Application.h"
 
 #include <iostream>
-#include <string>
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <imgui.h>
-#include <backends/imgui_impl_glfw.h>
-#include <backends/imgui_impl_opengl3.h>
 
 #include "EventDispatcher.h"
-#include "ResourceManager.h"
 
 namespace Spectre
 {
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
+		: m_IsRunning(true)
 	{
 		m_Window = std::make_unique<Window>(1280, 720, "Spectre Engine");
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
@@ -27,7 +20,11 @@ namespace Spectre
 	}
 
 	Application::~Application()
-	{}
+	{
+		while (!m_LayerStack.empty()) {
+			m_LayerStack.pop_back();
+		}
+	}
 
 	void Application::run()
 	{
@@ -35,7 +32,7 @@ namespace Spectre
 			// Handle input
 			glfwPollEvents();
 
-			for (auto layer : layerStack) {
+			for (auto const& layer : m_LayerStack) {
 				layer->onUpdate();
 				layer->onRender();
 
@@ -44,7 +41,6 @@ namespace Spectre
 				layer->imGuiEnd();
 			}
 			
-			// Swap buffers
 			glfwSwapBuffers(m_Window->getNativeWindow());
 		}
 	}
@@ -54,10 +50,10 @@ namespace Spectre
 		m_IsRunning = false;
 	}
 
-	void Application::addLayer(Layer* layer)
+	void Application::addLayer(std::unique_ptr<Layer> layer)
 	{
-		layerStack.push_back(layer);
-		layer->onAttach();
+		m_LayerStack.push_back(std::move(layer));
+		m_LayerStack.back()->onAttach();
 	}
 
 	void Application::onEvent(Event& event)
@@ -65,7 +61,7 @@ namespace Spectre
 		EventDispatcher dispatcher(event);
 		dispatcher.dispatch<WindowCloseEvent>(std::bind(&Application::onWindowClose, this, std::placeholders::_1));
 
-		for (auto it = layerStack.end(); it != layerStack.begin(); ) {
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
 			(*--it)->onEvent(event);
 
 			if (event.m_IsHandled) {

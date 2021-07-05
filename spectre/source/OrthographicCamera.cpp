@@ -12,15 +12,12 @@ namespace Spectre
 {
 	OrthographicCamera::OrthographicCamera()
 	{
-		m_Position = glm::vec3(0.0f, 0.0f, 1.0f);
-
 		m_View = glm::mat4(1.0f);
 		ResourceManager::getShader("texture")->use();
 		ResourceManager::getShader("texture")->setUniformMat4("uView", m_View);
 
-		glm::mat4 projection = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1000.0f, 1000.0f);
-
-		ResourceManager::getShader("texture")->setUniformMat4("uProjection", projection);
+		m_Projection = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);
+		ResourceManager::getShader("texture")->setUniformMat4("uProjection", m_Projection);
 	}
 	
 	void OrthographicCamera::onEvent(Event & event)
@@ -60,8 +57,9 @@ namespace Spectre
 
 	bool OrthographicCamera::onMouseScroll(MouseScrollEvent& event)
 	{
-		m_ZoomLevel += static_cast<float>(event.getOffset()) * 0.25f;
+		m_ZoomLevel += static_cast<float>(-event.getOffset()) * 0.25f;
 		m_Projection = glm::ortho(0.0f, 1280.0f * m_ZoomLevel, 0.0f, 720.0f * m_ZoomLevel, -1.0f, 1.0f);
+
 		ResourceManager::getShader("texture")->use();
 		ResourceManager::getShader("texture")->setUniformMat4("uProjection", m_Projection);
 

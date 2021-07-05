@@ -18,10 +18,8 @@ namespace Spectre {
 			ResourceManager::addTexture("white-texture", "assets/textures/white-texture.png");
 			ResourceManager::addTexture("grass-top", "assets/textures/grass-top.png");
 
-			addLayer(new EditorLayer());
+			addLayer(std::make_unique<EditorLayer>());
 		}
-
-		~SpectreEditor() = default;
 	};
 }
 

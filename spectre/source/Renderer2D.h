@@ -17,6 +17,7 @@ namespace Spectre
 		glm::vec4 position;
 		glm::vec4 color;
 		glm::vec2 textureCoordinate;
+		float textureId;
 	};
 
 	class Renderer2D
@@ -32,7 +33,7 @@ namespace Spectre
 		void flush();
 
 		void drawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
-		void drawQuad(const glm::vec2& position, const glm::vec2& size, const std::string& textureName);
+		void drawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture> texture);
 
 		void resetStatistics()
 		{
@@ -49,11 +50,14 @@ namespace Spectre
 		const uint32_t MAX_QUAD_COUNT = 25000;
 		const uint32_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * 4;
 		const uint32_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;
+		const uint32_t MAX_TEXTURE_SLOTS = 2;
 
 		QuadVertex* m_VertexDataBase = nullptr;
 		QuadVertex* m_VertexDataPtr = nullptr;
 
 		uint32_t* m_IndexData = nullptr;
+
+		uint32_t m_TextureSlots[2];
 
 		unsigned int m_VertexArray;
 		unsigned int m_VertexBuffer;
@@ -63,6 +67,6 @@ namespace Spectre
 		int m_QuadCount = 0;
 		int m_VertexCount = 0;
 
-		int m_IndexCount = 0;
+		uint32_t m_IndexCount = 0;
 	};
 }

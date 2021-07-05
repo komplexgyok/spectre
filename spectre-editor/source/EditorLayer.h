@@ -4,12 +4,16 @@
 
 #include <random>
 
+#include "Framebuffer.h"
+#include "Scene.h"
+
 namespace Spectre
 {
 	class EditorLayer : public Layer
 	{
 	public:
 		EditorLayer();
+		~EditorLayer();
 
 		virtual void onAttach() override;
 		virtual void onDetach() override;
@@ -22,11 +26,10 @@ namespace Spectre
 		virtual void imGuiEnd() override;
 
 	private:
+		Scene m_Scene;
 		Renderer2D m_Renderer;
 		OrthographicCamera m_Camera;
-
-		std::random_device m_RandomDevice;
-		std::mt19937 m_Generator;
+		Framebuffer m_Framebuffer;
 
 		glm::vec3 m_BackgroundColor;
 		int m_GridSize;

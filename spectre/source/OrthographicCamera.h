@@ -18,12 +18,9 @@ namespace Spectre
 		bool onMouseScroll(MouseScrollEvent& event);
 
 	private:
-		glm::vec3 m_Position;
-
 		glm::mat4 m_View;
 		glm::mat4 m_Projection;
 
 		float m_ZoomLevel = 1.0f;
-		float m_AspectRatio = 16.0f / 9.0f;
 	};
 }

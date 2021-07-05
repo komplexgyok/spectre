@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include "event/Event.h"
 
 namespace Spectre

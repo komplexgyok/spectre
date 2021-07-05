@@ -9,6 +9,7 @@
 #include "Renderer2D.h"
 #include "Window.h"
 #include "event/WindowCloseEvent.h"
+#include "event/WindowResizeEvent.h"
 
 namespace Spectre
 {
@@ -21,24 +22,18 @@ namespace Spectre
 		void run();
 		void close();
 
-		void addLayer(Layer* layer);
+		void addLayer(std::unique_ptr<Layer> layer);
 
 		void onEvent(Event& event);
 		bool onWindowClose(WindowCloseEvent& event);
 
 		static Application& get() { return *s_Instance; }
-		Window& getWindow() { return *m_Window; }
+		inline Window& getWindow() { return *m_Window; }
 
 	private:
 		std::unique_ptr<Window> m_Window;
-		std::vector<Layer*> layerStack;
-		unsigned int texture;
-
-		
-		unsigned int indexBuffer;
-
-		glm::vec4 backgroundColor;
-		bool m_IsRunning = true;
+		std::vector<std::unique_ptr<Layer>> m_LayerStack;
+		bool m_IsRunning;
 
 		static Application* s_Instance;
 	};

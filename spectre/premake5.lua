@@ -17,6 +17,7 @@ project "spectre"
     includedirs
     {
         "source",
+        "vendor/entt/include",
         "vendor/glad/include",
         "vendor/glfw/glfw/include",
         "vendor/glm",
