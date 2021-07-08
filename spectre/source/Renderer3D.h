@@ -1,6 +1,11 @@
 #pragma once
 
+#include <memory>
+
 #include <glm/glm.hpp>
+
+#include "Mesh.h"
+#include "Shader.h"
 
 namespace Spectre
 {
@@ -13,8 +18,10 @@ namespace Spectre
 		void drawCube(const glm::vec3& position);
 		void drawCube(const glm::vec3& position, int index);
 
+		void renderMesh(const glm::vec3& transform, const Mesh& mesh, std::shared_ptr<Shader> shader);
+
 	private:
-		unsigned int vertexArray;
-		unsigned int vertexBuffer;
+		uint32_t vertexArray;
+		uint32_t vertexBuffer;
 	};
 }

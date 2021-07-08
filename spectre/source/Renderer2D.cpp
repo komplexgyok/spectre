@@ -12,6 +12,9 @@ namespace Spectre
 		m_VertexDataBase = new QuadVertex[MAX_VERTEX_COUNT];
 		m_IndexData = new uint32_t[MAX_INDEX_COUNT];
 
+		memset(m_VertexDataBase, 0, MAX_VERTEX_COUNT * sizeof(QuadVertex));
+		memset(m_IndexData, 0, MAX_INDEX_COUNT * sizeof(uint32_t));
+
 		uint32_t offset = 0;
 		
 		for (uint32_t i = 0; i < MAX_INDEX_COUNT; i += 6) {

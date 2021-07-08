@@ -20,6 +20,7 @@ namespace Spectre
 	private:
 		uint32_t m_RendererId;
 		uint32_t m_ColorAttachment;
+		uint32_t m_DepthAttachment;
 
 		int32_t m_Width;
 		int32_t m_Height;

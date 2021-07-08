@@ -26,6 +26,7 @@ namespace Spectre
 
 		void onEvent(Event& event);
 		bool onWindowClose(WindowCloseEvent& event);
+		bool onWindowResize(WindowResizeEvent& event);
 
 		static Application& get() { return *s_Instance; }
 		inline Window& getWindow() { return *m_Window; }

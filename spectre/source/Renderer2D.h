@@ -47,7 +47,7 @@ namespace Spectre
 		int getVertexCount() { return m_VertexCount; }
 
 	private:
-		const uint32_t MAX_QUAD_COUNT = 25000;
+		const uint32_t MAX_QUAD_COUNT = 20000;
 		const uint32_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * 4;
 		const uint32_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;
 		const uint32_t MAX_TEXTURE_SLOTS = 2;

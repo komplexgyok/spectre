@@ -7,7 +7,7 @@
 namespace Spectre
 {
 	Framebuffer::Framebuffer()
-		: m_RendererId(0), m_ColorAttachment(0), m_Width(0), m_Height(0)
+		: m_RendererId(0), m_ColorAttachment(0), m_DepthAttachment(0), m_Width(0), m_Height(0)
 	{}
 
 	Framebuffer::~Framebuffer()
@@ -29,6 +29,11 @@ namespace Spectre
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
+
+		glGenRenderbuffers(1, &m_DepthAttachment);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_DepthAttachment);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Width, m_Height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthAttachment);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 			std::cout << "Framebuffer error" << std::endl;

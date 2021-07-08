@@ -1,6 +1,8 @@
 #include "OrthographicCamera.h"
 
 #include <iostream>
+
+#include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "EventDispatcher.h"
@@ -62,6 +64,8 @@ namespace Spectre
 
 		ResourceManager::getShader("texture")->use();
 		ResourceManager::getShader("texture")->setUniformMat4("uProjection", m_Projection);
+
+		glViewport(0, 0, static_cast<int32_t>(1280.0f * m_ZoomLevel), static_cast<int32_t>(720.0f * m_ZoomLevel));
 
 		return true;
 	}

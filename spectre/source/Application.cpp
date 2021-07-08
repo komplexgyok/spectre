@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "EventDispatcher.h"
@@ -73,6 +74,12 @@ namespace Spectre
 	bool Application::onWindowClose(WindowCloseEvent& event)
 	{
 		m_IsRunning = false;
+		return true;
+	}
+
+	bool Application::onWindowResize(WindowResizeEvent& event)
+	{
+		glViewport(0, 0, event.getWidth(), event.getHeight());
 		return true;
 	}
 }

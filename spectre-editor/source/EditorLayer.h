@@ -4,6 +4,7 @@
 
 #include <random>
 
+#include "EditorCamera.h"
 #include "Framebuffer.h"
 #include "Scene.h"
 
@@ -27,11 +28,12 @@ namespace Spectre
 
 	private:
 		Scene m_Scene;
-		Renderer2D m_Renderer;
-		OrthographicCamera m_Camera;
+		Renderer3D m_Renderer;
+		//OrthographicCamera m_Camera;
 		Framebuffer m_Framebuffer;
+		EditorCamera m_Camera;
 
+		// ImGui settings
 		glm::vec3 m_BackgroundColor;
-		int m_GridSize;
 	};
 }
