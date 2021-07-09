@@ -7,6 +7,8 @@
 #include "EditorCamera.h"
 #include "Framebuffer.h"
 #include "Scene.h"
+#include "panels/HierarchyPanel.h"
+#include "panels/InspectorPanel.h"
 
 namespace Spectre
 {
@@ -20,6 +22,7 @@ namespace Spectre
 		virtual void onDetach() override;
 
 		virtual void onEvent(Event& event) override;
+		virtual void onUpdate() override;
 		virtual void onRender() override;
 		virtual void onImGuiRender() override;
 
@@ -27,11 +30,15 @@ namespace Spectre
 		virtual void imGuiEnd() override;
 
 	private:
-		Scene m_Scene;
+		std::shared_ptr<Scene> m_Scene;
 		Renderer3D m_Renderer;
-		//OrthographicCamera m_Camera;
 		Framebuffer m_Framebuffer;
 		EditorCamera m_Camera;
+		
+		HierarchyPanel m_HierarchyPanel;
+		InspectorPanel m_InspectorPanel;
+
+		bool m_IsViewportHovered;
 
 		// ImGui settings
 		glm::vec3 m_BackgroundColor;

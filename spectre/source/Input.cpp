@@ -13,4 +13,22 @@ namespace Spectre
 
 		return state == GLFW_PRESS;
 	}
+
+	bool Input::isMouseButtonPressed(int button)
+	{
+		GLFWwindow* window = Application::get().getWindow().getNativeWindow();
+		int state = glfwGetMouseButton(window, button);
+
+		return state == GLFW_PRESS;
+	}
+
+	glm::vec2 Input::getMousePosition()
+	{
+		double x, y;
+
+		GLFWwindow* window = Application::get().getWindow().getNativeWindow();
+		glfwGetCursorPos(window, &x, &y);
+		
+		return glm::vec2(static_cast<float>(x), static_cast<float>(y));
+	}
 }

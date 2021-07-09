@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+#include <glm/glm.hpp>
+
 #include "Event.h"
 
 namespace Spectre
@@ -22,6 +24,8 @@ namespace Spectre
 
 			return stream.str();
 		}
+
+		inline glm::vec2 getPosition() const { return glm::vec2(m_PositionX, m_PositionY); }
 
 		static EventType getStaticType() { return EventType::MouseMove; }
 

@@ -2,39 +2,23 @@
 
 #include <iostream>
 
+#include <glm/glm.hpp>
+
 #include "components/NameComponent.h"
+#include "components/TransformComponent.h"
 
 namespace Spectre
 {
 	Scene::Scene()
-	{
-		struct TransformComponent
-		{
-			glm::mat4 transform;
-
-			TransformComponent() = default;
-			TransformComponent(const glm::mat4& transform)
-				: transform(transform)
-			{}
-		};
-
-		//entt::entity entity = m_Entities.create();
-		//m_Entities.emplace<TransformComponent>(entity);
-	}
+	{}
 	
 	Scene::~Scene()
 	{}
-
-	void Scene::listEntities()
-	{
-		m_Entities.each([](auto entity) {
-			std::cout << (uint32_t)entity << std::endl;
-		});
-	}
 
 	void Scene::addEntity()
 	{
 		entt::entity entity = m_Entities.create();
 		m_Entities.emplace<NameComponent>(entity, "Entity");
+		m_Entities.emplace<TransformComponent>(entity, glm::vec3(0.0f, 0.0f, 0.0f));
 	}
 }

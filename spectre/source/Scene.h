@@ -12,7 +12,6 @@ namespace Spectre
 		Scene();
 		~Scene();
 
-		void listEntities();
 		void addEntity();
 
 		entt::registry& getEntities() { return m_Entities; }
