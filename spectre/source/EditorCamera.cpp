@@ -17,6 +17,7 @@ namespace Spectre
 		, m_Position(glm::vec3(0.0f, 0.0f, 6.0f)), m_FrontDirection(glm::vec3(0.0f, 0.0f, -1.0f)), m_UpDirection(glm::vec3(0.0f, 1.0f, 0.0f))
 		, m_Yaw(-90.0f), m_Pitch(0.0f)
 		, m_View(glm::mat4(1.0f)), m_Projection(glm::mat4(1.0f))
+		, m_IsFirstMouse(true), m_LastMouseX(0.0f), m_LastMouseY(0.0f)
 	{
 		m_FrontDirection.x = cos(glm::radians(m_Yaw));
 		m_FrontDirection.z = sin(glm::radians(m_Yaw));
@@ -34,22 +35,59 @@ namespace Spectre
 
 	void EditorCamera::onUpdate(float deltaTime)
 	{
-		float sensitivity = 0.1f;
+		float cameraSpeed = 2.5f * deltaTime;
+		float mouseSensitivity = 0.2f;
 
-		if (Input::isKeyPressed(SPECTRE_KEY_D)) {
-			m_Yaw += 0.1f * sensitivity;
+		if (Input::isMouseButtonPressed(1)) {
+			if (Input::isKeyPressed(SPECTRE_KEY_W)) {
+				m_Position += m_FrontDirection * cameraSpeed;
+			}
+		
+			if (Input::isKeyPressed(SPECTRE_KEY_S)) {
+				m_Position -= m_FrontDirection * cameraSpeed;
+			}
+
+			if (Input::isKeyPressed(SPECTRE_KEY_A)) {
+				m_Position -= glm::normalize(glm::cross(m_FrontDirection, m_UpDirection)) * cameraSpeed;
+			}
+
+			if (Input::isKeyPressed(SPECTRE_KEY_D)) {
+				m_Position += glm::normalize(glm::cross(m_FrontDirection, m_UpDirection)) * cameraSpeed;
+			}
+
+			float mouseX = Input::getMousePosition().x;
+			float mouseY = Input::getMousePosition().y;
+
+			if (m_IsFirstMouse) {
+				std::cout << "First" << std::endl;
+				m_LastMouseX = mouseX;
+				m_LastMouseY = mouseY;
+				m_IsFirstMouse = false;
+			}
+
+			float mouseOffsetX = m_LastMouseX - mouseX;
+			float mouseOffsetY = mouseY - m_LastMouseY;
+			m_LastMouseX = mouseX;
+			m_LastMouseY = mouseY;
+
+			mouseOffsetX *= mouseSensitivity;
+			mouseOffsetY *= mouseSensitivity;
+
+			m_Yaw -= mouseOffsetX;
+			m_Pitch -= mouseOffsetY;
+
+			m_FrontDirection.x = cos(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
+			m_FrontDirection.y = sin(glm::radians(m_Pitch));
+			m_FrontDirection.z = sin(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
+			m_FrontDirection = glm::normalize(m_FrontDirection);
+
+			setView(glm::lookAt(m_Position, m_Position + m_FrontDirection, m_UpDirection));
+			ResourceManager::getShader("mesh")->use();
+			ResourceManager::getShader("mesh")->setUniformMat4("u_View", m_View);
 		}
-		if (Input::isKeyPressed(SPECTRE_KEY_A)) {
-			m_Yaw -= 0.1f * sensitivity;
+		else {
+			m_IsFirstMouse = true;
 		}
-
-		m_FrontDirection.x = cos(glm::radians(m_Yaw));
-		m_FrontDirection.z = sin(glm::radians(m_Yaw));
-		m_FrontDirection = glm::normalize(m_FrontDirection);
-
-		setView(glm::lookAt(m_Position, m_Position + m_FrontDirection, m_UpDirection));
-		ResourceManager::getShader("mesh")->use();
-		ResourceManager::getShader("mesh")->setUniformMat4("u_View", m_View);
 	}
 
 	bool EditorCamera::onKeyPress(KeyPressEvent& event)

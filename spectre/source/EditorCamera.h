@@ -40,5 +40,9 @@ namespace Spectre
 
 		glm::mat4 m_View;
 		glm::mat4 m_Projection;
+
+		bool m_IsFirstMouse;
+		float m_LastMouseX;
+		float m_LastMouseY;
 	};
 }
