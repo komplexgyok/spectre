@@ -62,15 +62,20 @@ namespace Spectre
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
-	void Renderer3D::renderMesh(const glm::vec3& transform, const Mesh& mesh, std::shared_ptr<Shader> shader)
+	void Renderer3D::renderMesh(const TransformComponent& transform, const Mesh& mesh, std::shared_ptr<Shader> shader)
 	{
 		shader->use();
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), transform);
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, transform.position);
+		model = glm::rotate(model, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, transform.scale);
 		shader->setUniformMat4("u_Model", model);
+		
 		glBindVertexArray(mesh.getVertexArray());
-		uint32_t c = mesh.getIndexCount();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getIndexBuffer());
 		glDrawElements(GL_TRIANGLES, mesh.getIndexCount(), GL_UNSIGNED_INT, nullptr);
-		//glBindVertexArray(0);
 	}
 }

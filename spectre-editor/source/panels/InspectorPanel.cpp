@@ -9,9 +9,11 @@
 #include <imgui/imgui/imgui.h>
 
 #include "components/MeshComponent.h"
+#include "components/MeshRendererComponent.h"
 #include "components/NameComponent.h"
 #include "components/SpriteRendererComponent.h"
 #include "components/TransformComponent.h"
+#include "ResourceManager.h"
 
 namespace Spectre
 {
@@ -42,13 +44,13 @@ namespace Spectre
 			}
 
 			if (ImGui::BeginPopup("ComponentSelect")) {
-				const char* componentTypes[] = { "Transform", "SpriteRenderer", "Mesh" };
+				const char* componentTypes[] = { "Transform", "SpriteRenderer", "Mesh", "MeshRenderer"};
 				static int selectedComponent = -1;
 
 				ImGui::Text("Component Type");
 				ImGui::Separator();
 
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 4; i++) {
 					if (ImGui::Selectable(componentTypes[i])) {
 						selectedComponent = i;
 					}
@@ -84,6 +86,17 @@ namespace Spectre
 						}
 						else {
 							m_Scene->getEntities().emplace<MeshComponent>(entity, "assets/meshes/cube.obj");
+						}
+					}
+					break;
+
+					case ComponentType::MeshRendererComponent:
+					{
+						if (m_Scene->getEntities().all_of<MeshRendererComponent>(entity)) {
+							isComponentPresent = true;
+						}
+						else {
+							m_Scene->getEntities().emplace<MeshRendererComponent>(entity, ResourceManager::getShader("mesh"));
 						}
 					}
 					break;
@@ -159,22 +172,57 @@ namespace Spectre
 
 				TransformComponent& transform = m_Scene->getEntities().get<TransformComponent>(entity);
 
-				ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.85f);
+				ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.2f);
 
 				ImGui::AlignTextToFramePadding();
+				ImGui::Text("Position");
 				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "X");
 				ImGui::SameLine();
-				ImGui::SliderFloat("##HiddenTransformX", &transform.position.x, -5.0f, 5.0f);
+				ImGui::DragFloat("##HiddenTransformPositionX", &transform.position.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f");
 
-				ImGui::AlignTextToFramePadding();
+				ImGui::SameLine();
 				ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Y");
 				ImGui::SameLine();
-				ImGui::SliderFloat("##HiddenTransformY", &transform.position.y, -5.0f, 5.0f);
+				ImGui::DragFloat("##HiddenTransformPositionY", &transform.position.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f");
 
-				ImGui::AlignTextToFramePadding();
+				ImGui::SameLine();
 				ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "Z");
 				ImGui::SameLine();
-				ImGui::SliderFloat("##HiddenTransformZ", &transform.position.z, -20.0f, 20.0f);
+				ImGui::DragFloat("##HiddenTransformPositionZ", &transform.position.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f");
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::Text("Rotation");
+				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "X");
+				ImGui::SameLine();
+				ImGui::DragFloat("##HiddenTransformRotationX", &transform.rotation.x, 1.0f, -FLT_MAX, +FLT_MAX, "%.3f");
+
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Y");
+				ImGui::SameLine();
+				ImGui::DragFloat("##HiddenTransformRotationY", &transform.rotation.y, 1.0f, -FLT_MAX, +FLT_MAX, "%.3f");
+
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "Z");
+				ImGui::SameLine();
+				ImGui::DragFloat("##HiddenTransformRotationZ", &transform.rotation.z, 1.0f, -FLT_MAX, +FLT_MAX, "%.3f");
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::Text("Scale");
+				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "X");
+				ImGui::SameLine();
+				ImGui::DragFloat("##HiddenTransformScaleX", &transform.scale.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f");
+
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Y");
+				ImGui::SameLine();
+				ImGui::DragFloat("##HiddenTransformScaleY", &transform.scale.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f");
+
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "Z");
+				ImGui::SameLine();
+				ImGui::DragFloat("##HiddenTransformScaleZ", &transform.scale.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f");
+
+				//ImGui::DragFloat("##HiddenTransformScaleXYZ", &transform.scale, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f");
 
 				ImGui::PopItemWidth();
 			}
@@ -227,5 +275,10 @@ namespace Spectre
 
 			ImGui::Dummy(ImVec2(0.0f, 5.0f));
 		}
+	}
+
+	void InspectorPanel::showMeshRendererComponent()
+	{
+		entt::entity entity = (entt::entity)m_HierarchyPanel->getSelected();
 	}
 }

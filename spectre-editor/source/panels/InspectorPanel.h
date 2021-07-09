@@ -9,7 +9,8 @@ namespace Spectre
 	{
 		TransformComponent,
 		SpriteRendererComponent,
-		MeshComponent
+		MeshComponent,
+		MeshRendererComponent
 	};
 
 	class InspectorPanel
@@ -25,6 +26,7 @@ namespace Spectre
 		void showTransformComponent();
 		void showSpriteRendererComponent();
 		void showMeshComponent();
+		void showMeshRendererComponent();
 
 		std::shared_ptr<Scene> m_Scene;
 		HierarchyPanel* m_HierarchyPanel;

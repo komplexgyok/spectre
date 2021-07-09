@@ -14,6 +14,7 @@ namespace Spectre {
 			ResourceManager::addShader("flat-color", "assets/shaders/flat-color.vert", "assets/shaders/flat-color.frag");
 			ResourceManager::addShader("texture", "assets/shaders/texture.vert", "assets/shaders/texture.frag");
 			ResourceManager::addShader("mesh", "assets/shaders/mesh.vert", "assets/shaders/mesh.frag");
+			ResourceManager::addShader("light", "assets/shaders/light.vert", "assets/shaders/light.frag");
 
 			// Load textures
 			ResourceManager::addTexture("white-texture", "assets/textures/white-texture.png");

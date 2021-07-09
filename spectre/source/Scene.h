@@ -12,7 +12,9 @@ namespace Spectre
 		Scene();
 		~Scene();
 
-		void addEntity();
+		void createEntity();
+		void create3DObject();
+		void createLight();
 
 		entt::registry& getEntities() { return m_Entities; }
 

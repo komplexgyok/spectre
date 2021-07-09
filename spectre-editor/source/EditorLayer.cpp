@@ -9,6 +9,7 @@
 #include <imgui/imgui/backends/imgui_impl_glfw.cpp>
 
 #include "components/MeshComponent.h"
+#include "components/MeshRendererComponent.h"
 #include "components/NameComponent.h"
 #include "components/SpriteRendererComponent.h"
 #include "components/TransformComponent.h"
@@ -35,6 +36,9 @@ namespace Spectre
 		ResourceManager::getShader("mesh")->use();
 		ResourceManager::getShader("mesh")->setUniformMat4("u_View", m_Camera.getView());
 		ResourceManager::getShader("mesh")->setUniformMat4("u_Projection", m_Camera.getProjection());
+		ResourceManager::getShader("light")->use();
+		ResourceManager::getShader("light")->setUniformMat4("u_View", m_Camera.getView());
+		ResourceManager::getShader("light")->setUniformMat4("u_Projection", m_Camera.getProjection());
 
 		m_Framebuffer.create(1280, 720);
 
@@ -79,12 +83,21 @@ namespace Spectre
 		glClearColor(m_BackgroundColor.r, m_BackgroundColor.g, m_BackgroundColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		auto group = m_Scene->getEntities().group<TransformComponent>(entt::get<MeshComponent>);
+		auto group = m_Scene->getEntities().group<TransformComponent>(entt::get<MeshComponent, MeshRendererComponent>);
 		for (auto entity : group) {
-			auto [transform, mesh] = group.get(entity);
-			transform.position;
-			mesh.mesh;
-			m_Renderer.renderMesh(transform.position, mesh.mesh, ResourceManager::getShader("mesh"));
+			auto [transform, mesh, meshRenderer] = group.get(entity);
+
+			if (meshRenderer.shader->getId() == ResourceManager::getShader("mesh")->getId()) {
+				ResourceManager::getShader("mesh")->use();
+				ResourceManager::getShader("mesh")->setUniformVec4("u_ObjectColor", glm::vec4(0.2f, 0.3f, 0.8f, 1.0f));
+				ResourceManager::getShader("mesh")->setUniformVec4("u_LightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+			}
+			else if (meshRenderer.shader->getId() == ResourceManager::getShader("light")->getId()) {
+				ResourceManager::getShader("light")->use();
+				ResourceManager::getShader("light")->setUniformVec4("u_ObjectColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+			}
+
+			m_Renderer.renderMesh(transform, mesh.mesh, meshRenderer.shader);
 		}
 
 		/*auto view = m_Scene.getEntities().view<TransformComponent>();

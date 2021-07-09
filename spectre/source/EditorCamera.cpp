@@ -84,6 +84,8 @@ namespace Spectre
 			setView(glm::lookAt(m_Position, m_Position + m_FrontDirection, m_UpDirection));
 			ResourceManager::getShader("mesh")->use();
 			ResourceManager::getShader("mesh")->setUniformMat4("u_View", m_View);
+			ResourceManager::getShader("light")->use();
+			ResourceManager::getShader("light")->setUniformMat4("u_View", m_View);
 		}
 		else {
 			m_IsFirstMouse = true;

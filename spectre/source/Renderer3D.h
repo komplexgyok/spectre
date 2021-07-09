@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 
+#include "components/TransformComponent.h"
 #include "Mesh.h"
 #include "Shader.h"
 
@@ -18,7 +19,7 @@ namespace Spectre
 		void drawCube(const glm::vec3& position);
 		void drawCube(const glm::vec3& position, int index);
 
-		void renderMesh(const glm::vec3& transform, const Mesh& mesh, std::shared_ptr<Shader> shader);
+		void renderMesh(const TransformComponent& transform, const Mesh& mesh, std::shared_ptr<Shader> shader);
 
 	private:
 		uint32_t vertexArray;

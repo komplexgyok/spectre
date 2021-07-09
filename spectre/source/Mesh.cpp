@@ -115,6 +115,10 @@ namespace Spectre
 				m_Vertices.push_back({glm::vec3(x, y, z)});
 			}
 
+			else if (type == "vn") {
+
+			}
+
 			// Indices
 			else if (type == "f") {
 				uint32_t index[3];
