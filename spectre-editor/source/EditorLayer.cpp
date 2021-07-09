@@ -64,10 +64,10 @@ namespace Spectre
 		m_Camera.onEvent(event);
 	}
 
-	void EditorLayer::onUpdate()
+	void EditorLayer::onUpdate(float deltaTime)
 	{
 		if (m_IsViewportHovered) {
-			m_Camera.onUpdate();
+			m_Camera.onUpdate(deltaTime);
 		}
 	}
 

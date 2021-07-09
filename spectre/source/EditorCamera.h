@@ -14,7 +14,7 @@ namespace Spectre
 		EditorCamera(float FOV, float aspectRatio, float nearClip, float farClip);
 
 		void onEvent(Event& event);
-		void onUpdate();
+		void onUpdate(float deltaTime);
 
 		bool onKeyPress(KeyPressEvent& event);
 		bool onMouseMove(MouseMoveEvent& event);

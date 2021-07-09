@@ -12,7 +12,7 @@ namespace Spectre
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
-		: m_IsRunning(true)
+		: m_IsRunning(true), m_DeltaTime(0.0f), m_LastFrame(0.0f)
 	{
 		m_Window = std::make_unique<Window>(1280, 720, "Spectre Engine");
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
@@ -30,11 +30,15 @@ namespace Spectre
 	void Application::run()
 	{
 		while (m_IsRunning) {
+			float currentFrame = static_cast<float>(glfwGetTime());
+			m_DeltaTime = currentFrame - m_LastFrame;
+			m_LastFrame = currentFrame;
+
 			// Handle input
 			glfwPollEvents();
 
 			for (auto const& layer : m_LayerStack) {
-				layer->onUpdate();
+				layer->onUpdate(m_DeltaTime);
 				layer->onRender();
 
 				layer->imGuiBegin();

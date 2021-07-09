@@ -15,7 +15,7 @@ namespace Spectre
 		virtual void onDetach();
 
 		virtual void onEvent(Event& event);
-		virtual void onUpdate();
+		virtual void onUpdate(float deltaTime);
 		virtual void onRender();
 		virtual void onImGuiRender();
 

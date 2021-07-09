@@ -22,7 +22,7 @@ namespace Spectre
 		virtual void onDetach() override;
 
 		virtual void onEvent(Event& event) override;
-		virtual void onUpdate() override;
+		virtual void onUpdate(float deltaTime) override;
 		virtual void onRender() override;
 		virtual void onImGuiRender() override;
 

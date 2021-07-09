@@ -35,6 +35,8 @@ namespace Spectre
 		std::unique_ptr<Window> m_Window;
 		std::vector<std::unique_ptr<Layer>> m_LayerStack;
 		bool m_IsRunning;
+		float m_DeltaTime;
+		float m_LastFrame;
 
 		static Application* s_Instance;
 	};

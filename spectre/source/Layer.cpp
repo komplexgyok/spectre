@@ -11,7 +11,7 @@ namespace Spectre
 	void Layer::onEvent(Event& event)
 	{}
 
-	void Layer::onUpdate()
+	void Layer::onUpdate(float deltaTime)
 	{}
 
 	void Layer::onRender()

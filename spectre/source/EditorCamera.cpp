@@ -32,14 +32,14 @@ namespace Spectre
 		dispatcher.dispatch<MouseMoveEvent>(std::bind(&EditorCamera::onMouseMove, this, std::placeholders::_1));
 	}
 
-	void EditorCamera::onUpdate()
+	void EditorCamera::onUpdate(float deltaTime)
 	{
-		float sensitivity = 0.25;
+		float sensitivity = 0.1f;
 
-		if (Input::isKeyPressed(SPECTRE_KEY_RIGHT)) {
+		if (Input::isKeyPressed(SPECTRE_KEY_D)) {
 			m_Yaw += 0.1f * sensitivity;
 		}
-		if (Input::isKeyPressed(SPECTRE_KEY_LEFT)) {
+		if (Input::isKeyPressed(SPECTRE_KEY_A)) {
 			m_Yaw -= 0.1f * sensitivity;
 		}
 
