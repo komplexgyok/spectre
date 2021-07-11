@@ -8,6 +8,8 @@ namespace Spectre
 	{
 		Mesh mesh;
 
-		MeshComponent() = default;
+		MeshComponent(const std::string& filepath)
+			: mesh(filepath)
+		{}
 	};
 }

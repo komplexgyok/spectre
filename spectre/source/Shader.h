@@ -18,6 +18,7 @@ namespace Spectre
 
 		void setUniformInt(const std::string& name, int value);
 		void setUniformIntArray(const std::string& name, uint32_t count, int* values);
+		void setUniformVec3(const std::string& name, const glm::vec3& vector);
 		void setUniformVec4(const std::string& name, const glm::vec4& vector);
 		void setUniformMat4(const std::string& name, const glm::mat4& matrix);
 

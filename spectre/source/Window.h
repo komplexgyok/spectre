@@ -20,6 +20,8 @@ namespace Spectre
 
 		void setEventCallback(std::function<void(Event& event)> eventCallback) { m_EventCallback = eventCallback; }
 
+		bool m_IsVsync;
+
 	private:
 		GLFWwindow* m_Window;
 		unsigned int m_Width;

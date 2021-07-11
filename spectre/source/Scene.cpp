@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "components/NameComponent.h"
 #include "components/TransformComponent.h"
@@ -38,8 +39,11 @@ namespace Spectre
 	{
 		entt::entity entity = m_Entities.create();
 		m_Entities.emplace<NameComponent>(entity, "Light");
-		m_Entities.emplace<TransformComponent>(entity, glm::vec3(0.0f, 0.0f, 0.0f));
-		m_Entities.emplace<MeshComponent>(entity);
+		m_Entities.emplace<TransformComponent>(entity, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f));
+		m_Entities.emplace<MeshComponent>(entity, "assets/meshes/cube.obj");
 		m_Entities.emplace<MeshRendererComponent>(entity, ResourceManager::getShader("light"));
+
+		ResourceManager::getShader("mesh")->use();
+		ResourceManager::getShader("mesh")->setUniformVec3("u_LightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 }

@@ -17,7 +17,7 @@
 namespace Spectre
 {
 	Window::Window(unsigned int width, unsigned int height, std::string_view title)
-		: m_Window(nullptr), m_Width(width), m_Height(height), m_Title(title)
+		: m_Window(nullptr), m_Width(width), m_Height(height), m_Title(title), m_IsVsync(true)
 	{
 		// GLFW initialization
 		std::cout << "Initializing GLFW ... ";
@@ -40,8 +40,10 @@ namespace Spectre
 		std::cout << "OK" << std::endl;
 
 		glfwMakeContextCurrent(m_Window);
-		// Disable V-Sync
-		glfwSwapInterval(0);
+		
+		if (!m_IsVsync) {
+			glfwSwapInterval(0);
+		}
 
 		// Glad initialization
 		std::cout << "Initializing Glad ... ";
@@ -132,7 +134,7 @@ namespace Spectre
 			eventCallback(event);
 		});
 
-		//glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
 		//glEnable(GL_BLEND);
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}

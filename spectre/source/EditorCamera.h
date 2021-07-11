@@ -19,6 +19,7 @@ namespace Spectre
 		bool onKeyPress(KeyPressEvent& event);
 		bool onMouseMove(MouseMoveEvent& event);
 
+		glm::vec3 getPosition() const { return m_Position; }
 		glm::mat4 getView() const { return m_View; }
 		glm::mat4 getProjection() const { return m_Projection; }
 

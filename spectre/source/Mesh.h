@@ -10,13 +10,12 @@ namespace Spectre
 	struct Vertex
 	{
 		glm::vec3 position;
-		//glm::vec3 normal;
+		glm::vec3 normal;
 	};
 	
 	class Mesh
 	{
 	public:
-		Mesh();
 		Mesh(const std::string& filepath);
 		~Mesh();
 

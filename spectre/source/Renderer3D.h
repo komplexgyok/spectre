@@ -2,8 +2,6 @@
 
 #include <memory>
 
-#include <glm/glm.hpp>
-
 #include "components/TransformComponent.h"
 #include "Mesh.h"
 #include "Shader.h"
@@ -13,16 +11,9 @@ namespace Spectre
 	class Renderer3D
 	{
 	public:
-		Renderer3D();
-		~Renderer3D();
-
-		void drawCube(const glm::vec3& position);
-		void drawCube(const glm::vec3& position, int index);
+		Renderer3D() = default;
+		~Renderer3D() = default;
 
 		void renderMesh(const TransformComponent& transform, const Mesh& mesh, std::shared_ptr<Shader> shader);
-
-	private:
-		uint32_t vertexArray;
-		uint32_t vertexBuffer;
 	};
 }

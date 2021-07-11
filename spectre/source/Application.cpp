@@ -30,6 +30,8 @@ namespace Spectre
 	void Application::run()
 	{
 		while (m_IsRunning) {
+			glfwSwapInterval(static_cast<int>(getWindow().m_IsVsync));
+
 			float currentFrame = static_cast<float>(glfwGetTime());
 			m_DeltaTime = currentFrame - m_LastFrame;
 			m_LastFrame = currentFrame;

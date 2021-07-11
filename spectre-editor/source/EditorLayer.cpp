@@ -20,7 +20,7 @@ namespace Spectre
 	EditorLayer::EditorLayer()
 		: m_Camera(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f)
 		, m_IsViewportHovered(false)
-		, m_BackgroundColor(glm::vec3(0.0f, 0.0f, 0.0f))
+		, m_BackgroundColor(glm::vec3(34.0f / 255.0f, 34.0f / 255.0f, 34.0f / 255.0f))
 	{
 		m_Scene = std::make_shared<Scene>();
 		m_HierarchyPanel.setScene(m_Scene);
@@ -77,41 +77,30 @@ namespace Spectre
 
 	void EditorLayer::onRender()
 	{
-		glEnable(GL_DEPTH_TEST);
 		m_Framebuffer.bind();
 
 		glClearColor(m_BackgroundColor.r, m_BackgroundColor.g, m_BackgroundColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		auto group = m_Scene->getEntities().group<TransformComponent>(entt::get<MeshComponent, MeshRendererComponent>);
+		
 		for (auto entity : group) {
 			auto [transform, mesh, meshRenderer] = group.get(entity);
 
 			if (meshRenderer.shader->getId() == ResourceManager::getShader("mesh")->getId()) {
-				ResourceManager::getShader("mesh")->use();
-				ResourceManager::getShader("mesh")->setUniformVec4("u_ObjectColor", glm::vec4(0.2f, 0.3f, 0.8f, 1.0f));
-				ResourceManager::getShader("mesh")->setUniformVec4("u_LightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+				meshRenderer.shader->use();
+				meshRenderer.shader->setUniformVec3("u_ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+				meshRenderer.shader->setUniformVec3("u_ViewPosition", m_Camera.getPosition());
 			}
 			else if (meshRenderer.shader->getId() == ResourceManager::getShader("light")->getId()) {
-				ResourceManager::getShader("light")->use();
-				ResourceManager::getShader("light")->setUniformVec4("u_ObjectColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+				//ResourceManager::getShader("light")->use();
+				//ResourceManager::getShader("light")->setUniformVec3("u_ObjectColor", glm::vec3(1.0f, 1.0f, 1.0f));
+				ResourceManager::getShader("mesh")->use();
+				ResourceManager::getShader("mesh")->setUniformVec3("u_LightPosition", transform.position);
 			}
 
 			m_Renderer.renderMesh(transform, mesh.mesh, meshRenderer.shader);
 		}
-
-		/*auto view = m_Scene.getEntities().view<TransformComponent>();
-		for (auto entity : view) {
-			TransformComponent& transform = view.get<TransformComponent>(entity);
-
-			if (m_Scene.getEntities().all_of<SpriteRendererComponent>(entity)) {
-				SpriteRendererComponent& spriteRenderer = m_Scene.getEntities().get<SpriteRendererComponent>(entity);
-				m_Renderer.drawQuad(glm::vec2(transform.position.x, transform.position.y), glm::vec2(90.0f, 90.0f), spriteRenderer.color);
-			}
-			else {
-				m_Renderer.drawQuad(glm::vec2(transform.position.x, transform.position.y), glm::vec2(90.0f, 90.0f), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
-			}
-		}*/
 
 		m_Framebuffer.unbind();
 	}
@@ -195,6 +184,7 @@ namespace Spectre
 		ImGui::ColorEdit3("Background Color", &m_BackgroundColor.r, ImGuiColorEditFlags_NoInputs);
 		static bool isWireframe = false;
 		ImGui::Checkbox("Wireframe", &isWireframe);
+		ImGui::Checkbox("V-Sync", &Application::get().getWindow().m_IsVsync);
 
 		if (isWireframe) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

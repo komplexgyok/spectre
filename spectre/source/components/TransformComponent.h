@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include <glm/glm.hpp>
 
 namespace Spectre
@@ -18,5 +16,9 @@ namespace Spectre
 			rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 			scale = glm::vec3(1.0f, 1.0f, 1.0f);
 		}
+
+		TransformComponent(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
+			: position(position), rotation(rotation), scale(scale)
+		{}
 	};
 }

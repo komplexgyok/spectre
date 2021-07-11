@@ -35,7 +35,7 @@ namespace Spectre
 
 	void EditorCamera::onUpdate(float deltaTime)
 	{
-		float cameraSpeed = 2.5f * deltaTime;
+		float cameraSpeed = 4.5f * deltaTime;
 		float mouseSensitivity = 0.2f;
 
 		if (Input::isMouseButtonPressed(1)) {
