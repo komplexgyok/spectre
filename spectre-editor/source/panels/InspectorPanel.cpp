@@ -35,6 +35,9 @@ namespace Spectre
 			// Mesh Component
 			showMeshComponent();
 
+			// Mesh Renderer Component
+			showMeshRendererComponent();
+
 			static bool isComponentPresent = false;
 
 			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.0f - 100.0f);
@@ -280,5 +283,71 @@ namespace Spectre
 	void InspectorPanel::showMeshRendererComponent()
 	{
 		entt::entity entity = (entt::entity)m_HierarchyPanel->getSelected();
+
+		if (m_Scene->getEntities().all_of<MeshRendererComponent>(entity)) {
+			if (ImGui::CollapsingHeader("Mesh Renderer Component")) {
+				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+				MeshRendererComponent& meshRenderer = m_Scene->getEntities().get<MeshRendererComponent>(entity);
+
+				if (ImGui::CollapsingHeader("Material")) {
+					ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.2f);
+
+					ImGui::AlignTextToFramePadding();
+					ImGui::Text("Ambient");
+					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "X");
+					ImGui::SameLine();
+					ImGui::DragFloat("##HiddenMaterialAmbientX", &meshRenderer.materialAmbient.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+
+					ImGui::SameLine();
+					ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Y");
+					ImGui::SameLine();
+					ImGui::DragFloat("##HiddenMaterialAmbientY", &meshRenderer.materialAmbient.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+
+					ImGui::SameLine();
+					ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "Z");
+					ImGui::SameLine();
+					ImGui::DragFloat("##HiddenMaterialAmbientZ", &meshRenderer.materialAmbient.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+
+					ImGui::AlignTextToFramePadding();
+					ImGui::Text("Diffuse");
+					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "X");
+					ImGui::SameLine();
+					ImGui::DragFloat("##HiddenMaterialDiffuseX", &meshRenderer.materialDiffuse.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+
+					ImGui::SameLine();
+					ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Y");
+					ImGui::SameLine();
+					ImGui::DragFloat("##HiddenMaterialDiffuseY", &meshRenderer.materialDiffuse.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+
+					ImGui::SameLine();
+					ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "Z");
+					ImGui::SameLine();
+					ImGui::DragFloat("##HiddenMaterialDiffuseZ", &meshRenderer.materialDiffuse.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+
+					ImGui::AlignTextToFramePadding();
+					ImGui::Text("Specular");
+					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "X");
+					ImGui::SameLine();
+					ImGui::DragFloat("##HiddenMaterialSpecularX", &meshRenderer.materialSpecular.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+
+					ImGui::SameLine();
+					ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Y");
+					ImGui::SameLine();
+					ImGui::DragFloat("##HiddenMaterialSpecularY", &meshRenderer.materialSpecular.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+
+					ImGui::SameLine();
+					ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "Z");
+					ImGui::SameLine();
+					ImGui::DragFloat("##HiddenMaterialSpecularZ", &meshRenderer.materialSpecular.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+
+					ImGui::AlignTextToFramePadding();
+					ImGui::Text("Shininess");
+					ImGui::DragFloat("##HiddenMaterialShininess", &meshRenderer.materialShininess, 1.0f, -FLT_MAX, +FLT_MAX, "%.3f");
+
+					ImGui::PopItemWidth();
+				}
+			}
+		}
 	}
 }

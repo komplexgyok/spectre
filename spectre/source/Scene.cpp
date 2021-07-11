@@ -44,6 +44,9 @@ namespace Spectre
 		m_Entities.emplace<MeshRendererComponent>(entity, ResourceManager::getShader("light"));
 
 		ResourceManager::getShader("mesh")->use();
-		ResourceManager::getShader("mesh")->setUniformVec3("u_LightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.color", glm::vec3(1.0f, 1.0f, 1.0f));
+		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.ambient", glm::vec3(1.0f, 1.0f, 1.0f));
+		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 }

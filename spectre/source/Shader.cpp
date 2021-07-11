@@ -35,6 +35,12 @@ namespace Spectre
 		glUniform1i(location, value);
 	}
 
+	void Shader::setUniformFloat(const std::string& name, float value)
+	{
+		int location = getUniformLocation(name);
+		glUniform1f(location, value);
+	}
+
 	void Shader::setUniformIntArray(const std::string& name, uint32_t count, int* values)
 	{
 		int location = getUniformLocation(name);

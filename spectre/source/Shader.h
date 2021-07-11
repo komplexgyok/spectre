@@ -17,6 +17,7 @@ namespace Spectre
 		inline unsigned int getId() const { return id; }
 
 		void setUniformInt(const std::string& name, int value);
+		void setUniformFloat(const std::string& name, float value);
 		void setUniformIntArray(const std::string& name, uint32_t count, int* values);
 		void setUniformVec3(const std::string& name, const glm::vec3& vector);
 		void setUniformVec4(const std::string& name, const glm::vec4& vector);

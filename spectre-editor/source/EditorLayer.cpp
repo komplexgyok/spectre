@@ -89,14 +89,17 @@ namespace Spectre
 
 			if (meshRenderer.shader->getId() == ResourceManager::getShader("mesh")->getId()) {
 				meshRenderer.shader->use();
-				meshRenderer.shader->setUniformVec3("u_ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+				
+				meshRenderer.shader->setUniformVec3("u_Material.ambient", meshRenderer.materialAmbient);
+				meshRenderer.shader->setUniformVec3("u_Material.diffuse", meshRenderer.materialDiffuse);
+				meshRenderer.shader->setUniformVec3("u_Material.specular", meshRenderer.materialSpecular);
+				meshRenderer.shader->setUniformFloat("u_Material.shininess", meshRenderer.materialShininess);
+
 				meshRenderer.shader->setUniformVec3("u_ViewPosition", m_Camera.getPosition());
 			}
 			else if (meshRenderer.shader->getId() == ResourceManager::getShader("light")->getId()) {
-				//ResourceManager::getShader("light")->use();
-				//ResourceManager::getShader("light")->setUniformVec3("u_ObjectColor", glm::vec3(1.0f, 1.0f, 1.0f));
 				ResourceManager::getShader("mesh")->use();
-				ResourceManager::getShader("mesh")->setUniformVec3("u_LightPosition", transform.position);
+				ResourceManager::getShader("mesh")->setUniformVec3("u_Light.position", transform.position);
 			}
 
 			m_Renderer.renderMesh(transform, mesh.mesh, meshRenderer.shader);
