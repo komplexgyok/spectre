@@ -19,6 +19,9 @@ namespace Spectre {
 			// Load textures
 			ResourceManager::addTexture("white-texture", "assets/textures/white-texture.png");
 			ResourceManager::addTexture("grass-top", "assets/textures/grass-top.png");
+			ResourceManager::addTexture("container", "assets/textures/container.png");
+			ResourceManager::addTexture("container-specular", "assets/textures/container-specular.png");
+			ResourceManager::addTexture("matrix", "assets/textures/matrix.jpg");
 
 			addLayer(std::make_unique<EditorLayer>());
 		}

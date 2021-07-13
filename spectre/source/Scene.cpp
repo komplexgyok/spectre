@@ -31,8 +31,13 @@ namespace Spectre
 		entt::entity entity = m_Entities.create();
 		m_Entities.emplace<NameComponent>(entity, "3D Object");
 		m_Entities.emplace<TransformComponent>(entity, glm::vec3(0.0f, 0.0f, 0.0f));
-		m_Entities.emplace<MeshComponent>(entity, "assets/meshes/cube.obj");
+		m_Entities.emplace<MeshComponent>(entity, "assets/meshes/crate.obj");
 		m_Entities.emplace<MeshRendererComponent>(entity, ResourceManager::getShader("mesh"));
+
+		ResourceManager::getShader("mesh")->use();
+		ResourceManager::getShader("mesh")->setUniformInt("u_Material.diffuse", 0);
+		ResourceManager::getShader("mesh")->setUniformInt("u_Material.specular", 1);
+		ResourceManager::getShader("mesh")->setUniformInt("u_Material.emission", 2);
 	}
 
 	void Scene::createLight()
@@ -45,8 +50,8 @@ namespace Spectre
 
 		ResourceManager::getShader("mesh")->use();
 		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.color", glm::vec3(1.0f, 1.0f, 1.0f));
-		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.ambient", glm::vec3(1.0f, 1.0f, 1.0f));
-		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
 		ResourceManager::getShader("mesh")->setUniformVec3("u_Light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 }

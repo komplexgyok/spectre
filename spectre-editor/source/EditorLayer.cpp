@@ -90,12 +90,23 @@ namespace Spectre
 			if (meshRenderer.shader->getId() == ResourceManager::getShader("mesh")->getId()) {
 				meshRenderer.shader->use();
 				
-				meshRenderer.shader->setUniformVec3("u_Material.ambient", meshRenderer.materialAmbient);
-				meshRenderer.shader->setUniformVec3("u_Material.diffuse", meshRenderer.materialDiffuse);
+				//meshRenderer.shader->setUniformVec3("u_Material.ambient", meshRenderer.materialAmbient);
+				//meshRenderer.shader->setUniformVec3("u_Material.diffuse", meshRenderer.materialDiffuse);
+				
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, ResourceManager::getTexture("container")->getId());
+
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, ResourceManager::getTexture("container-specular")->getId());
+
+				glActiveTexture(GL_TEXTURE2);
+				glBindTexture(GL_TEXTURE_2D, ResourceManager::getTexture("matrix")->getId());
+
 				meshRenderer.shader->setUniformVec3("u_Material.specular", meshRenderer.materialSpecular);
 				meshRenderer.shader->setUniformFloat("u_Material.shininess", meshRenderer.materialShininess);
 
 				meshRenderer.shader->setUniformVec3("u_ViewPosition", m_Camera.getPosition());
+				meshRenderer.shader->setUniformFloat("u_Time", static_cast<float>(glfwGetTime()));
 			}
 			else if (meshRenderer.shader->getId() == ResourceManager::getShader("light")->getId()) {
 				ResourceManager::getShader("mesh")->use();

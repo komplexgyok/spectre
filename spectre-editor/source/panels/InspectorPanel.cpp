@@ -348,6 +348,8 @@ namespace Spectre
 					ImGui::PopItemWidth();
 				}
 			}
+
+			ImGui::Dummy(ImVec2(0.0f, 5.0f));
 		}
 	}
 }

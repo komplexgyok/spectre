@@ -5,7 +5,7 @@ namespace Spectre
 	class Texture
 	{
 	public:
-		Texture(int width, int height, unsigned char* data);
+		Texture(int width, int height, int channels, unsigned char* data);
 
 		void bind() const;
 

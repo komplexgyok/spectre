@@ -17,6 +17,7 @@ namespace Spectre
 		std::string type;
 
 		std::vector<glm::vec3> positions;
+		std::vector<glm::vec2> textureCoordinates;
 		std::vector<glm::vec3> normals;
 		uint32_t currentIndex = 0;
 
@@ -33,6 +34,14 @@ namespace Spectre
 				positions.push_back(glm::vec3(x, y, z));
 			}
 
+			// Texture coordinates
+			else if (type == "vt") {
+				float s, t;
+
+				stream >> s >> t;
+				textureCoordinates.push_back(glm::vec2(s, t));
+			}
+
 			// Vertex normals
 			else if (type == "vn") {
 				float x, y, z;
@@ -47,7 +56,7 @@ namespace Spectre
 				char slashes[2];
 				
 				while (stream >> index[0] >> slashes[0] >> index[1] >> slashes[1] >> index[2]) {
-					m_Vertices.push_back({ positions[index[0] - 1], normals[index[2] - 1] });
+					m_Vertices.push_back({ positions[index[0] - 1], textureCoordinates[index[1] - 1] , normals[index[2] - 1] });
 					m_Indices.push_back(currentIndex++);
 				}
 			}
@@ -66,7 +75,9 @@ namespace Spectre
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, textureCoordinate));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
 		// Index buffer
 		glCreateBuffers(1, &m_IndexBuffer);

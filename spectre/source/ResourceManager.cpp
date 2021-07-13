@@ -48,7 +48,7 @@ namespace Spectre
 		ImageData imageData = loadImage(textureFile);
 
 		// Store the new texture
-		std::shared_ptr<Texture> texture = std::make_shared<Texture>(imageData.width, imageData.height, imageData.data);
+		std::shared_ptr<Texture> texture = std::make_shared<Texture>(imageData.width, imageData.height, imageData.channels, imageData.data);
 		textures[name] = texture;
 
 		std::cout << "Texture added: " << name << std::endl;
