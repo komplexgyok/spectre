@@ -47,6 +47,7 @@ namespace Spectre
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.Fonts->AddFontFromFileTTF("assets/fonts/SourceCodePro-Regular.ttf", 16);
 
 		ImGui::StyleColorsDark();
 
@@ -187,8 +188,8 @@ namespace Spectre
 			ImGui::EndMainMenuBar();
 		}
 
-		//static bool show = true;
-		//ImGui::ShowDemoWindow(&show);
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
 
 		// Hierarchy
 		m_HierarchyPanel.onImGuiRender();
