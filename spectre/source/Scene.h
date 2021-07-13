@@ -12,9 +12,10 @@ namespace Spectre
 		Scene();
 		~Scene();
 
-		void createEntity();
-		void create3DObject();
-		void createLight();
+		uint32_t createEntity();
+		uint32_t create3DObject();
+		uint32_t createLight();
+		uint32_t createCamera();
 
 		entt::registry& getEntities() { return m_Entities; }
 

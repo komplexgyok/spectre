@@ -8,6 +8,7 @@
 #include <entt/include/entt.hpp>
 #include <imgui/imgui/imgui.h>
 
+#include "components/CameraComponent.h"
 #include "components/MeshComponent.h"
 #include "components/MeshRendererComponent.h"
 #include "components/NameComponent.h"
@@ -38,6 +39,9 @@ namespace Spectre
 			// Mesh Renderer Component
 			showMeshRendererComponent();
 
+			// Camera Component
+			showCameraComponent();
+
 			static bool isComponentPresent = false;
 
 			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.0f - 100.0f);
@@ -47,13 +51,13 @@ namespace Spectre
 			}
 
 			if (ImGui::BeginPopup("ComponentSelect")) {
-				const char* componentTypes[] = { "Transform", "SpriteRenderer", "Mesh", "MeshRenderer"};
+				const char* componentTypes[] = { "Transform", "SpriteRenderer", "Mesh", "MeshRenderer", "Camera" };
 				static int selectedComponent = -1;
 
 				ImGui::Text("Component Type");
 				ImGui::Separator();
 
-				for (int i = 0; i < 4; i++) {
+				for (int i = 0; i < 5; i++) {
 					if (ImGui::Selectable(componentTypes[i])) {
 						selectedComponent = i;
 					}
@@ -100,6 +104,18 @@ namespace Spectre
 						}
 						else {
 							m_Scene->getEntities().emplace<MeshRendererComponent>(entity, ResourceManager::getShader("mesh"));
+						}
+					}
+					break;
+
+					case ComponentType::CameraComponent:
+					{
+						if (m_Scene->getEntities().all_of<CameraComponent>(entity)) {
+							isComponentPresent = true;
+						}
+						else {
+							TransformComponent& transform = m_Scene->getEntities().get<TransformComponent>(entity);
+							m_Scene->getEntities().emplace<CameraComponent>(entity, transform.position, glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f, false);
 						}
 					}
 					break;
@@ -350,6 +366,22 @@ namespace Spectre
 			}
 
 			ImGui::Dummy(ImVec2(0.0f, 5.0f));
+		}
+	}
+
+	void InspectorPanel::showCameraComponent()
+	{
+		entt::entity entity = (entt::entity)m_HierarchyPanel->getSelected();
+
+		if (m_Scene->getEntities().all_of<CameraComponent>(entity)) {
+			if (ImGui::CollapsingHeader("Camera Component")) {
+				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+				CameraComponent& camera = m_Scene->getEntities().get<CameraComponent>(entity);
+
+				ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+				ImGui::Image((ImTextureID)camera.camera.getFramebuffer().getColorAttachment(), ImVec2{ 128, 72 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+			}
 		}
 	}
 }

@@ -38,15 +38,19 @@ namespace Spectre
 
 		if (ImGui::BeginPopupContextWindow()) {
 			if (ImGui::Selectable("Create Entity")) {
-				m_Scene->createEntity();
+				m_Selected = m_Scene->createEntity();
 			}
 			
 			if (ImGui::Selectable("Create 3D Object")) {
-				m_Scene->create3DObject();
+				m_Selected = m_Scene->create3DObject();
 			}
 
 			if (ImGui::Selectable("Create Light")) {
-				m_Scene->createLight();
+				m_Selected = m_Scene->createLight();
+			}
+
+			if (ImGui::Selectable("Create Camera")) {
+				m_Selected = m_Scene->createCamera();
 			}
 
 			ImGui::EndPopup();

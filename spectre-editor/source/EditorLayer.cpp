@@ -8,6 +8,7 @@
 #include <imgui/imgui/backends/imgui_impl_opengl3.cpp>
 #include <imgui/imgui/backends/imgui_impl_glfw.cpp>
 
+#include "components/CameraComponent.h"
 #include "components/MeshComponent.h"
 #include "components/MeshRendererComponent.h"
 #include "components/NameComponent.h"
@@ -21,18 +22,20 @@ namespace Spectre
 		: m_Camera(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f)
 		, m_IsViewportHovered(false)
 		, m_BackgroundColor(glm::vec3(34.0f / 255.0f, 34.0f / 255.0f, 34.0f / 255.0f))
-	{
-		m_Scene = std::make_shared<Scene>();
-		m_HierarchyPanel.setScene(m_Scene);
-		m_InspectorPanel.setScene(m_Scene);
-		m_InspectorPanel.setHierarchyPanel(&m_HierarchyPanel);
-	}
+	{}
 
 	EditorLayer::~EditorLayer()
 	{}
 
 	void EditorLayer::onAttach()
 	{
+		m_Scene = std::make_shared<Scene>();
+		m_Scene->createCamera();
+		
+		m_HierarchyPanel.setScene(m_Scene);
+		m_InspectorPanel.setScene(m_Scene);
+		m_InspectorPanel.setHierarchyPanel(&m_HierarchyPanel);
+
 		ResourceManager::getShader("mesh")->use();
 		ResourceManager::getShader("mesh")->setUniformMat4("u_View", m_Camera.getView());
 		ResourceManager::getShader("mesh")->setUniformMat4("u_Projection", m_Camera.getProjection());
@@ -114,10 +117,73 @@ namespace Spectre
 				ResourceManager::getShader("mesh")->setUniformVec3("u_Light.position", transform.position);
 			}
 
+			ResourceManager::getShader("mesh")->use();
+			ResourceManager::getShader("mesh")->setUniformMat4("u_View", m_Camera.getView());
+			ResourceManager::getShader("light")->use();
+			ResourceManager::getShader("light")->setUniformMat4("u_View", m_Camera.getView());
+
 			m_Renderer.renderMesh(transform, mesh.mesh, meshRenderer.shader);
 		}
 
 		m_Framebuffer.unbind();
+
+		// Iterate through scene cameras
+		auto cameraGroup = m_Scene->getEntities().group<>(entt::get<TransformComponent, CameraComponent>);
+
+		for (auto cameraEntity : cameraGroup) {
+			auto [cameraTransform, camera] = cameraGroup.get(cameraEntity);
+
+			camera.camera.getFramebuffer().bind();
+
+			glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			auto group = m_Scene->getEntities().group<>(entt::get<TransformComponent, MeshComponent, MeshRendererComponent>);
+
+			for (auto entity : group) {
+				auto [transform, mesh, meshRenderer] = group.get<TransformComponent, MeshComponent, MeshRendererComponent>(entity);
+
+				if (meshRenderer.shader->getId() == ResourceManager::getShader("mesh")->getId()) {
+					meshRenderer.shader->use();
+
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, ResourceManager::getTexture("container")->getId());
+
+					glActiveTexture(GL_TEXTURE1);
+					glBindTexture(GL_TEXTURE_2D, ResourceManager::getTexture("container-specular")->getId());
+
+					glActiveTexture(GL_TEXTURE2);
+					glBindTexture(GL_TEXTURE_2D, ResourceManager::getTexture("matrix")->getId());
+
+					meshRenderer.shader->setUniformVec3("u_Material.specular", meshRenderer.materialSpecular);
+					meshRenderer.shader->setUniformFloat("u_Material.shininess", meshRenderer.materialShininess);
+
+					meshRenderer.shader->setUniformVec3("u_ViewPosition", m_Camera.getPosition());
+					meshRenderer.shader->setUniformFloat("u_Time", static_cast<float>(glfwGetTime()));
+				}
+				else if (meshRenderer.shader->getId() == ResourceManager::getShader("light")->getId()) {
+					ResourceManager::getShader("mesh")->use();
+					ResourceManager::getShader("mesh")->setUniformVec3("u_Light.position", transform.position);
+				}
+
+				/*glm::mat4 view = glm::lookAt(transform.position, transform.position + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				ResourceManager::getShader("mesh")->use();
+				ResourceManager::getShader("mesh")->setUniformMat4("u_View", view);
+				ResourceManager::getShader("mesh")->setUniformMat4("u_Projection", camera.camera.getProjection());
+				ResourceManager::getShader("light")->use();
+				ResourceManager::getShader("light")->setUniformMat4("u_View", view);
+				ResourceManager::getShader("light")->setUniformMat4("u_Projection", camera.camera.getProjection());*/
+
+				ResourceManager::getShader("mesh")->use();
+				ResourceManager::getShader("mesh")->setUniformMat4("u_View", camera.camera.getView());
+				ResourceManager::getShader("light")->use();
+				ResourceManager::getShader("light")->setUniformMat4("u_View", camera.camera.getView());
+
+				m_Renderer.renderMesh(transform, mesh.mesh, meshRenderer.shader);
+			}
+
+			camera.camera.getFramebuffer().unbind();
+		}
 	}
 
 	void EditorLayer::onImGuiRender()
@@ -188,8 +254,8 @@ namespace Spectre
 			ImGui::EndMainMenuBar();
 		}
 
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		//static bool show = true;
+		//ImGui::ShowDemoWindow(&show);
 
 		// Hierarchy
 		m_HierarchyPanel.onImGuiRender();
@@ -221,12 +287,52 @@ namespace Spectre
 		ImGui::Begin("Assets");
 		ImGui::End();
 
-		// Viewport
+		// Scene
+		if (!m_Scene->getEntities().empty()) {
+			entt::entity selectedEntity = (entt::entity)m_HierarchyPanel.getSelected();
+
+			if (m_Scene->getEntities().all_of<CameraComponent>(selectedEntity)) {
+				CameraComponent& camera = m_Scene->getEntities().get<CameraComponent>(selectedEntity);
+
+				ImGui::Begin("Camera");
+				ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+				ImGui::Image((ImTextureID)camera.camera.getFramebuffer().getColorAttachment(), ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+				ImGui::End();
+			}
+			else {
+				auto cameraGroup = m_Scene->getEntities().group<>(entt::get<TransformComponent, CameraComponent>);
+
+				for (auto cameraEntity : cameraGroup) {
+					auto [transform, camera] = cameraGroup.get(cameraEntity);
+
+					if (camera.camera.isPrimary()) {
+						ImGui::Begin("Main Camera");
+						ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+						ImGui::Image((ImTextureID)camera.camera.getFramebuffer().getColorAttachment(), ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+						ImGui::End();
+					}
+				}
+			}
+
+			auto cameraGroup = m_Scene->getEntities().group<>(entt::get<TransformComponent, CameraComponent>);
+
+			for (auto cameraEntity : cameraGroup) {
+				auto [transform, camera] = cameraGroup.get(cameraEntity);
+
+				if (camera.camera.isPrimary()) {
+					ImGui::Begin("Game");
+					ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+					ImGui::Image((ImTextureID)camera.camera.getFramebuffer().getColorAttachment(), ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+					ImGui::End();
+				}
+			}
+		}
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-		ImGui::Begin("Viewport");
+		ImGui::Begin("Scene");
 		m_IsViewportHovered = ImGui::IsWindowHovered();
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-		ImGui::Image((ImTextureID)m_Framebuffer.getColorAttachment(), ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{0, 1}, ImVec2{1, 0});
+		ImGui::Image((ImTextureID)m_Framebuffer.getColorAttachment(), ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		ImGui::End();
 		ImGui::PopStyleVar();
 
