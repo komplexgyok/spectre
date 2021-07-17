@@ -7,3 +7,6 @@
 [submodule "spectre/vendor/imgui/imgui"]
 	path = spectre/vendor/imgui/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "spectre/vendor/assimp"]
+	path = spectre/vendor/assimp/assimp
+	url = https://github.com/assimp/assimp

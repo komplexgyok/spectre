@@ -76,16 +76,25 @@ namespace Spectre
 			m_Yaw -= mouseOffsetX;
 			m_Pitch -= mouseOffsetY;
 
+			if (m_Pitch > 89.0f) {
+				m_Pitch = 89.0f;
+			}
+			if (m_Pitch < -89.0f) {
+				m_Pitch = -89.0f;
+			}
+
 			m_FrontDirection.x = cos(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
 			m_FrontDirection.y = sin(glm::radians(m_Pitch));
 			m_FrontDirection.z = sin(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
 			m_FrontDirection = glm::normalize(m_FrontDirection);
 
 			setView(glm::lookAt(m_Position, m_Position + m_FrontDirection, m_UpDirection));
-			ResourceManager::getShader("mesh")->use();
-			ResourceManager::getShader("mesh")->setUniformMat4("u_View", m_View);
+			ResourceManager::getShader("model")->use();
+			ResourceManager::getShader("model")->setUniformMat4("u_View", m_View);
 			ResourceManager::getShader("light")->use();
 			ResourceManager::getShader("light")->setUniformMat4("u_View", m_View);
+			ResourceManager::getShader("solid")->use();
+			ResourceManager::getShader("solid")->setUniformMat4("u_View", m_View);
 		}
 		else {
 			m_IsFirstMouse = true;

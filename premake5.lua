@@ -1,5 +1,5 @@
 workspace "spectre"
-    architecture "x86_64"
+    architecture "x86"
     startproject "spectre-editor"
 
     configurations
@@ -11,6 +11,7 @@ workspace "spectre"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "dependencies"
+	include "spectre/vendor/assimp"
 	include "spectre/vendor/glad"
 	include "spectre/vendor/glfw"
 	include "spectre/vendor/imgui"

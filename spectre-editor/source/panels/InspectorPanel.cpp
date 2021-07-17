@@ -42,6 +42,8 @@ namespace Spectre
 			// Camera Component
 			showCameraComponent();
 
+			ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
 			static bool isComponentPresent = false;
 
 			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.0f - 100.0f);
@@ -92,7 +94,7 @@ namespace Spectre
 							isComponentPresent = true;
 						}
 						else {
-							m_Scene->getEntities().emplace<MeshComponent>(entity, "assets/meshes/cube.obj");
+							//m_Scene->getEntities().emplace<MeshComponent>(entity, "assets/models/cube.fbx");
 						}
 					}
 					break;
@@ -103,7 +105,7 @@ namespace Spectre
 							isComponentPresent = true;
 						}
 						else {
-							m_Scene->getEntities().emplace<MeshRendererComponent>(entity, ResourceManager::getShader("mesh"));
+							m_Scene->getEntities().emplace<MeshRendererComponent>(entity, ResourceManager::getShader("model"));
 						}
 					}
 					break;
@@ -187,8 +189,6 @@ namespace Spectre
 
 		if (m_Scene->getEntities().all_of<TransformComponent>(entity)) {
 			if (ImGui::CollapsingHeader("Transform Component")) {
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
 				TransformComponent& transform = m_Scene->getEntities().get<TransformComponent>(entity);
 
 				ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.2f);
@@ -241,12 +241,9 @@ namespace Spectre
 				ImGui::SameLine();
 				ImGui::DragFloat("##HiddenTransformScaleZ", &transform.scale.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f");
 
-				//ImGui::DragFloat("##HiddenTransformScaleXYZ", &transform.scale, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f");
-
 				ImGui::PopItemWidth();
+				ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			}
-
-			ImGui::Dummy(ImVec2(0.0f, 5.0f));
 		}
 	}
 
@@ -256,8 +253,6 @@ namespace Spectre
 
 		if (m_Scene->getEntities().all_of<SpriteRendererComponent>(entity)) {
 			if (ImGui::CollapsingHeader("Sprite Renderer Component")) {
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
 				SpriteRendererComponent& spriteRenderer = m_Scene->getEntities().get<SpriteRendererComponent>(entity);
 
 				ImGui::AlignTextToFramePadding();
@@ -276,8 +271,6 @@ namespace Spectre
 
 		if (m_Scene->getEntities().all_of<MeshComponent>(entity)) {
 			if (ImGui::CollapsingHeader("Mesh Component")) {
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
 				MeshComponent& mesh = m_Scene->getEntities().get<MeshComponent>(entity);
 
 				std::string path = "assets/meshes";
@@ -287,12 +280,12 @@ namespace Spectre
 					filename << entry.path().filename().string();
 
 					if (ImGui::Button(filename.str().c_str())) {
-						m_Scene->getEntities().replace<MeshComponent>(entity, path.str());
+						//m_Scene->getEntities().replace<MeshComponent>(entity, path.str());
 					}
 				}
-			}
 
-			ImGui::Dummy(ImVec2(0.0f, 5.0f));
+				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+			}
 		}
 	}
 
@@ -302,8 +295,6 @@ namespace Spectre
 
 		if (m_Scene->getEntities().all_of<MeshRendererComponent>(entity)) {
 			if (ImGui::CollapsingHeader("Mesh Renderer Component")) {
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
 				MeshRendererComponent& meshRenderer = m_Scene->getEntities().get<MeshRendererComponent>(entity);
 
 				if (ImGui::CollapsingHeader("Material")) {
@@ -313,59 +304,59 @@ namespace Spectre
 					ImGui::Text("Ambient");
 					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "X");
 					ImGui::SameLine();
-					ImGui::DragFloat("##HiddenMaterialAmbientX", &meshRenderer.materialAmbient.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+					//ImGui::DragFloat("##HiddenMaterialAmbientX", &meshRenderer.materialAmbient.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
 
 					ImGui::SameLine();
 					ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Y");
 					ImGui::SameLine();
-					ImGui::DragFloat("##HiddenMaterialAmbientY", &meshRenderer.materialAmbient.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+					//ImGui::DragFloat("##HiddenMaterialAmbientY", &meshRenderer.materialAmbient.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
 
 					ImGui::SameLine();
 					ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "Z");
 					ImGui::SameLine();
-					ImGui::DragFloat("##HiddenMaterialAmbientZ", &meshRenderer.materialAmbient.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+					//ImGui::DragFloat("##HiddenMaterialAmbientZ", &meshRenderer.materialAmbient.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
 
 					ImGui::AlignTextToFramePadding();
 					ImGui::Text("Diffuse");
 					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "X");
 					ImGui::SameLine();
-					ImGui::DragFloat("##HiddenMaterialDiffuseX", &meshRenderer.materialDiffuse.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+					//ImGui::DragFloat("##HiddenMaterialDiffuseX", &meshRenderer.materialDiffuse.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
 
 					ImGui::SameLine();
 					ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Y");
 					ImGui::SameLine();
-					ImGui::DragFloat("##HiddenMaterialDiffuseY", &meshRenderer.materialDiffuse.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+					//ImGui::DragFloat("##HiddenMaterialDiffuseY", &meshRenderer.materialDiffuse.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
 
 					ImGui::SameLine();
 					ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "Z");
 					ImGui::SameLine();
-					ImGui::DragFloat("##HiddenMaterialDiffuseZ", &meshRenderer.materialDiffuse.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+					//ImGui::DragFloat("##HiddenMaterialDiffuseZ", &meshRenderer.materialDiffuse.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
 
 					ImGui::AlignTextToFramePadding();
 					ImGui::Text("Specular");
 					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "X");
 					ImGui::SameLine();
-					ImGui::DragFloat("##HiddenMaterialSpecularX", &meshRenderer.materialSpecular.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+					//ImGui::DragFloat("##HiddenMaterialSpecularX", &meshRenderer.materialSpecular.x, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
 
 					ImGui::SameLine();
 					ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Y");
 					ImGui::SameLine();
-					ImGui::DragFloat("##HiddenMaterialSpecularY", &meshRenderer.materialSpecular.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+					//ImGui::DragFloat("##HiddenMaterialSpecularY", &meshRenderer.materialSpecular.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
 
 					ImGui::SameLine();
 					ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "Z");
 					ImGui::SameLine();
-					ImGui::DragFloat("##HiddenMaterialSpecularZ", &meshRenderer.materialSpecular.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
+					//ImGui::DragFloat("##HiddenMaterialSpecularZ", &meshRenderer.materialSpecular.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.8f");
 
 					ImGui::AlignTextToFramePadding();
 					ImGui::Text("Shininess");
-					ImGui::DragFloat("##HiddenMaterialShininess", &meshRenderer.materialShininess, 1.0f, -FLT_MAX, +FLT_MAX, "%.3f");
+					//ImGui::DragFloat("##HiddenMaterialShininess", &meshRenderer.materialShininess, 1.0f, -FLT_MAX, +FLT_MAX, "%.3f");
 
 					ImGui::PopItemWidth();
 				}
-			}
 
-			ImGui::Dummy(ImVec2(0.0f, 5.0f));
+				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+			}
 		}
 	}
 
@@ -375,12 +366,12 @@ namespace Spectre
 
 		if (m_Scene->getEntities().all_of<CameraComponent>(entity)) {
 			if (ImGui::CollapsingHeader("Camera Component")) {
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
 				CameraComponent& camera = m_Scene->getEntities().get<CameraComponent>(entity);
 
 				ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 				ImGui::Image((ImTextureID)camera.camera.getFramebuffer().getColorAttachment(), ImVec2{ 128, 72 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+				ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			}
 		}
 	}

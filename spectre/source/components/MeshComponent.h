@@ -8,8 +8,11 @@ namespace Spectre
 	{
 		Mesh mesh;
 
-		MeshComponent(const std::string& filepath)
-			: mesh(filepath)
+		/*MeshComponent()
+		{}*/
+
+		MeshComponent(std::vector<Vertex> vertices, std::vector<uint32_t> indices)
+			: mesh(vertices, indices)
 		{}
 	};
 }

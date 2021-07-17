@@ -1,10 +1,9 @@
 #pragma once
 
-#include <memory>
-
+#include "components/MeshComponent.h"
+#include "components/MeshRendererComponent.h"
 #include "components/TransformComponent.h"
-#include "Mesh.h"
-#include "Shader.h"
+#include "EditorCamera.h"
 
 namespace Spectre
 {
@@ -14,6 +13,6 @@ namespace Spectre
 		Renderer3D() = default;
 		~Renderer3D() = default;
 
-		void renderMesh(const TransformComponent& transform, const Mesh& mesh, std::shared_ptr<Shader> shader);
+		void renderMesh(const TransformComponent& transform, const MeshComponent& mesh, const MeshRendererComponent& meshRenderer, const EditorCamera& camera, bool isOutline);
 	};
 }

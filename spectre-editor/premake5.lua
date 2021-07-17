@@ -17,6 +17,7 @@ project "spectre-editor"
     {
         "%{wks.location}/spectre/source",
         "%{wks.location}/spectre/vendor",
+        "%{wks.location}/spectre/vendor/assimp/assimp/include",
         "%{wks.location}/spectre/vendor/entt/include",
         "%{wks.location}/spectre/vendor/glm",
         "%{wks.location}/spectre/vendor/glad/include",

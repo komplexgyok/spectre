@@ -17,6 +17,7 @@ project "spectre"
     includedirs
     {
         "source",
+        "vendor/assimp/assimp/include",
         "vendor/entt/include",
         "vendor/glad/include",
         "vendor/glfw/glfw/include",
@@ -27,6 +28,7 @@ project "spectre"
 
     links
     {
+        "assimp",
         "glad",
         "glfw",
         "imgui"
