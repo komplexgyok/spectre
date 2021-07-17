@@ -23,7 +23,8 @@ project "assimp"
         "assimp/code/AssetLib/FBX/FBXExporter.h",
         "assimp/code/AssetLib/FBX/FBXExporter.cpp",
         "assimp/code/AssetLib/Obj/ObjExporter.h",
-        "assimp/code/AssetLib/Obj/ObjExporter.cpp"
+        "assimp/code/AssetLib/Obj/ObjExporter.cpp",
+        "assimp/contrib/zlib/contrib/inflate86/inffas86.c"
     }
 
     includedirs

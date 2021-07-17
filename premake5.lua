@@ -1,5 +1,5 @@
 workspace "spectre"
-    architecture "x86"
+    architecture "x86_64"
     startproject "spectre-editor"
 
     configurations
