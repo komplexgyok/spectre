@@ -1,5 +1,7 @@
 #include "HierarchyPanel.h"
 
+#include <iostream>
+
 #include <imgui/imgui/imgui.h>
 
 #include "components/NameComponent.h"
@@ -14,23 +16,25 @@ namespace Spectre
 	{
 		ImGui::Begin("Hierarchy");
 
-		ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
-
 		if (!m_Scene->getEntities().empty()) {
-			m_Scene->getEntities().each([&](entt::entity entity) {
+			// Sort entities by name
+			m_Scene->getEntities().sort<NameComponent>([](const auto& a, const auto& b) {
+				return a.name < b.name;
+			});
+
+			// List all entities
+			m_Scene->getEntities().view<NameComponent>().each([this](auto entity, auto name) {
+				ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
+
 				if (m_Selected == (uint32_t)entity) {
 					treeNodeFlags |= ImGuiTreeNodeFlags_Selected;
 				}
-				else {
-					treeNodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
-				}
 
-				NameComponent& name = m_Scene->getEntities().get<NameComponent>(entity);
-				
 				if (ImGui::TreeNodeEx((void*)(uint32_t)entity, treeNodeFlags, name.name.c_str())) {
 					if (ImGui::IsItemClicked()) {
 						m_Selected = (uint32_t)entity;
 					}
+
 					ImGui::TreePop();
 				}
 			});
