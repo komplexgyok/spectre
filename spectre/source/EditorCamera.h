@@ -23,8 +23,9 @@ namespace Spectre
 		glm::mat4 getView() const { return m_View; }
 		glm::mat4 getProjection() const { return m_Projection; }
 
+		void setAspectRatio(float aspectRatio);
 		void setView(const glm::mat4& view);
-		void setProjection(const glm::mat4& projection);
+		void setProjection(const glm::mat4& projection) { m_Projection = projection; }
 
 	private:
 		float m_FOV;

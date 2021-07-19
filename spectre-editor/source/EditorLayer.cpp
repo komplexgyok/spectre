@@ -20,7 +20,7 @@
 namespace Spectre
 {
 	EditorLayer::EditorLayer()
-		: m_Camera(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f)
+		: m_Camera(45.0f, 1280.0f / 720.0f, 0.1f, 100.0f)
 		, m_IsViewportHovered(false)
 		, m_BackgroundColor(glm::vec3(0.133f, 0.133f, 0.133f)) // 34, 34, 34
 	{}
@@ -470,6 +470,13 @@ ImGui::End();*/
 		ImGui::Begin("Scene");
 		m_IsViewportHovered = ImGui::IsWindowHovered();
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+
+		if (viewportSize.x != m_Framebuffer.getWidth() || viewportSize.y != m_Framebuffer.getHeight()) {
+			m_Framebuffer.recreate(viewportSize.x, viewportSize.y);
+		}
+
+		m_Camera.setAspectRatio(viewportSize.x / viewportSize.y);
+
 		ImGui::Image((ImTextureID)m_Framebuffer.getColorAttachment(), ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		ImGui::End();
 		ImGui::PopStyleVar();

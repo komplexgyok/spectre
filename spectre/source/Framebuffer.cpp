@@ -42,6 +42,22 @@ namespace Spectre
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void Framebuffer::recreate(int32_t width, int32_t height)
+	{
+		m_Width = width;
+		m_Height = height;
+
+		glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
+
+		glBindRenderbuffer(GL_RENDERBUFFER, m_DepthAttachment);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Width, m_Height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthAttachment);
+	}
+
 	void Framebuffer::bind() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererId);

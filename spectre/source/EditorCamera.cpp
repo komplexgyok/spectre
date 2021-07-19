@@ -23,7 +23,7 @@ namespace Spectre
 		m_FrontDirection.z = sin(glm::radians(m_Yaw));
 
 		m_View       = glm::lookAt(m_Position, m_Position + m_FrontDirection, m_UpDirection);
-		m_Projection = glm::perspective(m_FOV, m_AspectRatio, m_NearClip, m_FarClip);
+		m_Projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
 	}
 	
 	void EditorCamera::onEvent(Event& event)
@@ -120,6 +120,17 @@ namespace Spectre
 	bool EditorCamera::onMouseMove(MouseMoveEvent& event)
 	{
 		return true;
+	}
+
+	void EditorCamera::setAspectRatio(float aspectRatio)
+	{
+		m_AspectRatio = aspectRatio;
+		m_Projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
+
+		ResourceManager::getShader("model")->use();
+		ResourceManager::getShader("model")->setUniformMat4("u_Projection", m_Projection);
+		ResourceManager::getShader("solid")->use();
+		ResourceManager::getShader("solid")->setUniformMat4("u_Projection", m_Projection);
 	}
 
 	void EditorCamera::setView(const glm::mat4& view)
